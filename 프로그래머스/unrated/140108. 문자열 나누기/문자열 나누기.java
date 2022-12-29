@@ -4,7 +4,7 @@ class Solution {
         int x_count = 0;    // 문자열에서 x가 나온 횟수(문제 참고)
         int notX_count = 0; // 문자열에서 x가 아닌 횟수(문제 참고)
         char x = s.charAt(0);   // 첫글자 읽을 때 이 글자를 x로 놓음
-        String str = "";    // 문자열 분리된 것 저장용 (테스트 용도)
+        //String str = "";    // 문자열 분리된 것 저장용 (테스트 용도)
         
         // 문자열 길이만큼 반복문 돌리기(시간복잡도: n)
         for(int i=0; i<s.length(); i++) {
@@ -16,7 +16,7 @@ class Solution {
             else {
                 notX_count++;   // x가 아닌 카운트변수 증가
             }
-            str+=s.charAt(i);   
+            //str+=s.charAt(i);   
             
             // x랑 x가 아닌 다른글자 나온 횟수 같을때
             if(x_count == notX_count) {
@@ -28,7 +28,7 @@ class Solution {
                 x_count = 0;    // x가 나온 횟수 0으로 초기화
                 notX_count = 0; // x가 아닌 횟수 0으로 초기화
                 answer++;
-                str = "";
+                //str = "";
             }
             // x랑 x가 아닌 다른글자 나온 횟수 다른 경우
             else {
