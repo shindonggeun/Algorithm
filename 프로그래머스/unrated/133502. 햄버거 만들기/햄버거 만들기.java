@@ -15,6 +15,7 @@ class Solution {
             else {
                 stack.push(i);
             }
+            //System.out.println(stack);
         }
         
         return answer;
