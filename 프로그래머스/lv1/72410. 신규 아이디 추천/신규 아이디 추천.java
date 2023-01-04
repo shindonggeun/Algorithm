@@ -9,7 +9,6 @@ class Solution {
         new_id = noEmptyMakeA(new_id);          // 5단계
         new_id = noLengthGraterThan16(new_id);  // 6단계
         new_id = nolessThan2(new_id);           // 7단계
-            
         //System.out.println(new_id);
         answer = new_id;
         return answer;
