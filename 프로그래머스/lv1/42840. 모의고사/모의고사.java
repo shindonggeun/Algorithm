@@ -10,30 +10,33 @@ class Solution {
         ArrayList<Integer> list = new ArrayList<>();
         
         for(int i=0; i<answers.length; i++) {
-            if(answers[i] == one[i % 5]) {
+            if(answers[i] == one[i % 5]) {  // 문제 정답과 1번 수포자 정답 패턴과 같은 경우
                 score[0]++;
             }
-            if(answers[i] == two[i % 8]) {
+            if(answers[i] == two[i % 8]) {  // 문제 정답과 2번 수포자 정답 패턴과 같은 경우
                 score[1]++;
             }
-            if(answers[i] == three[i % 10]) {
+            if(answers[i] == three[i % 10]) {   // 문제 정답과 3번 수포자 정답 패턴과 같은 경우
                 score[2]++;
             }
         }
+        
+        // 가장 많이 맞춘 사람 찾기(1~3번 수포자) -> 먼저 2번수포자와 3번 수포자중 최대로 많이 맞춘 사람 찾은 뒤
+        // 그다음 1번 수포자와 위에서 나온 수포자랑 최대로 많이 맞춘 사람 비교
         int maxScore = Math.max(score[0], Math.max(score[1], score[2]));
-        if(maxScore == score[0]) {
+        if(maxScore == score[0]) {  // 최대 정답수가 1번 수포자 정답 수와 같은 경우
             list.add(1);
         }
-        if(maxScore == score[1]) {
+        if(maxScore == score[1]) {  // 최대 정답수가 2번 수포자 정답 수와 같은 경우
             list.add(2);
         }
-        if(maxScore == score[2]) {
+        if(maxScore == score[2]) {  // 최대 정답수가 3번 수포자와 정답 수와 같은 경우
             list.add(3);
         }
         
         answer = new int[list.size()];
         for(int i=0; i<list.size(); i++) {
-            answer[i] = list.get(i);
+            answer[i] = list.get(i);    // 인덱스로 접근
         }
         return answer;
     }
