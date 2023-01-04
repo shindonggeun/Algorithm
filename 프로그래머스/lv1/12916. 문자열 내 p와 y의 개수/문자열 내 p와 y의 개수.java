@@ -2,7 +2,7 @@ class Solution {
     boolean solution(String s) {
         boolean answer = true;
         s = s.toLowerCase();    // 문자열 소문자로 변환(문제에서 개수 비교할 때 대문자 소문자 구별 안한다 했으므로)
-        s = s.replaceAll("[a-o|q-x|z]", "");
+        s = s.replaceAll("[^py]", "");    // 정규식 이용해서 소문자 
         int p_count = 0;
         int y_count = 0;
         
