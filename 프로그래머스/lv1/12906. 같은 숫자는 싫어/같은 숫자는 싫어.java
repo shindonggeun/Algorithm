@@ -2,7 +2,7 @@ import java.util.*;
 
 public class Solution {
     public Stack<Integer> solution(int []arr) {
-        int[] answer = {};
+        //int[] answer = {};
         Stack<Integer> stack = new Stack<>();
         stack.add(arr[0]);
         
@@ -11,8 +11,10 @@ public class Solution {
                 stack.add(arr[i]);
             }
         }
+        //System.out.println(stack);
         
 
+        //return answer;
         return stack;
     }
 }
