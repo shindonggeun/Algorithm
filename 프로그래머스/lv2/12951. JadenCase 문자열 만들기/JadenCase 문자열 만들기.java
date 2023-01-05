@@ -10,7 +10,7 @@ class Solution {
         
         for(String str: strArr) {
             System.out.println(str);
-            // 빈 문자열인 경우
+            // 빈 문자열인 경우 ()
             if(str.equals("")) {
                 answer+=" ";
             }
@@ -20,11 +20,11 @@ class Solution {
             }
         }
         
-        //원래 문자열 마지막이 공백일 경우 그대로 answer 반환
-        if(s.substring(s.length() -1, s.length()).equals(" ")) return answer;
-        //마지막에 공백이 더해져서 그 공백을 제외한 answer값 반환
-        return answer.substring(0, answer.length() - 1);
+        //원래 문자열 마지막이 공백이 아닐 경우
+        if(s.substring(s.length() -1, s.length()).equals(" ") == false) {
+            answer = answer.substring(0, answer.length() - 1);
+        }
         
-        //return answer;
+        return answer;
     }
 }
