@@ -4,7 +4,7 @@ class Solution {
         
         // 공백문자로 문자열 쪼개기
         // 뒤에 -1 인자를 넣어야 문자열 맨뒤에 공백이 나와도 그것을 단어로 취급해서 잘라줌
-        String[] str = s.split(" ", -1);    
+        /*String[] str = s.split(" ", -1);    
                                    
         for(int i=0; i<str.length; i++) {
             for(int j=0; j<str[i].length(); j++) {
@@ -22,6 +22,15 @@ class Solution {
             }
         }
         
+        return answer;*/
+        
+        int cnt = 0;
+        String[] array = s.split("");
+
+        for(String ss : array) {
+            cnt = ss.contains(" ") ? 0 : cnt + 1;
+            answer += cnt%2 == 0 ? ss.toLowerCase() : ss.toUpperCase(); 
+        }
         return answer;
     }
 }
