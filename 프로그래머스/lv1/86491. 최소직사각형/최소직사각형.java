@@ -8,7 +8,7 @@ class Solution {
         for(int i=0; i<sizes.length; i++) {
             int big = 0;  
             int small = 0;
-            // 
+            // 가로 세로 비교
             if(sizes[i][0] < sizes[i][1]) {
                 big = sizes[i][1];
                 small = sizes[i][0];
@@ -17,6 +17,7 @@ class Solution {
                 big = sizes[i][0];
                 small = sizes[i][1];
             }
+            // 큰값들은 가로에 넣고 작은값들은 세로에 넣음
             result[i][0] = big;
             result[i][1] = small;
         }
