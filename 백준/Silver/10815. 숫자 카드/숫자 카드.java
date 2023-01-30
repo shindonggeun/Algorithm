@@ -22,7 +22,7 @@ public class Main {
 		Collections.sort(nlist); 
 		StringBuilder sb = new StringBuilder();
 		
-		// 이분탐색 이용함 (시간복잡도 -> O(NlogN) )
+		// 이분탐색 이용함 (시간복잡도 -> O(MlogN) )
 		for(int i=0; i<M; i++) {
 			int temp = Integer.parseInt(st.nextToken());
 			sb.append(binarySearch(nlist, N, temp) + " ");
