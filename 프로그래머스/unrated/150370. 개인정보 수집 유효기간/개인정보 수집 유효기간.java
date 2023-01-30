@@ -17,8 +17,9 @@ class Solution {
             
             int map_days = map.get(pri_arr[1]); // map에 저장된 약관에 따른 유효기간 일수 가져오기
             
-            result_days = result_days + map_days - 1;   // 유효기간 마지막 날짜 (-1 빼주는거 잊지말자)
+            result_days = result_days + map_days - 1;   // 개인정보 수집 일자 + 유효기간 계산 날짜 (-1 빼주는거 잊지말자)
             
+            // 유효기간 지난 경우
             if(now_days > result_days) {
                 list.add(i+1);
             }
