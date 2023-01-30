@@ -1,8 +1,8 @@
 import java.util.*;
 
 class Solution {
-    public int[] solution(String today, String[] terms, String[] privacies) {
-        int[] answer = {};
+    public List<Integer> solution(String today, String[] terms, String[] privacies) {
+        //int[] answer = {};
         List<Integer> list = new ArrayList<>();
         Map<String, Integer> map = new HashMap<>(); // key: 약관종류, value: 유효기간 달에 따른 일수 계산 (달 * 28)
         int now_days = getDays(today);
@@ -24,9 +24,9 @@ class Solution {
             }
         }        
         //System.out.println(list);
-        answer = list.stream().mapToInt(x->x).toArray();
+        //answer = list.stream().mapToInt(x->x).toArray();
         
-        return answer;
+        return list;
     }
     
     public int getDays(String yymmdd) {
