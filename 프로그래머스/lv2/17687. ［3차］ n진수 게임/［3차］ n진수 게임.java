@@ -10,7 +10,7 @@ class Solution {
         for(int i = 0; convert.length() <= t * m; i++){
             convert.append(Integer.toString(i, n));
         }
-        System.out.println(convert);
+        //System.out.println(convert);
         
         // 튜브의 순서에 해당하는 글자들만 추출
         for(int i = p - 1;  answer.length() < t; i += m){
