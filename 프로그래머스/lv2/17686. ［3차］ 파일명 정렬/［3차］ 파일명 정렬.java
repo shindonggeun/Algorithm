@@ -3,7 +3,7 @@ import java.util.*;
 class Solution {
     
     public String[] solution(String[] files) {
-        String[] answer = new String[files.length];
+        //String[] answer = new String[files.length];
         
         Arrays.sort(files, new Comparator<String>() {
            @Override
@@ -50,10 +50,10 @@ class Solution {
             } 
         });
         
-        for(int i=0; i<files.length; i++) {
+        /*for(int i=0; i<files.length; i++) {
             answer[i] = files[i];
-        }
+        }*/
         
-        return answer;
+        return files;
     }
 }
