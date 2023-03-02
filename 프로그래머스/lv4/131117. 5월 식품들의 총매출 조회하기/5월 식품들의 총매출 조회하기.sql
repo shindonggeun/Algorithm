@@ -1,0 +1,8 @@
+-- 코드를 입력하세요
+SELECT P.PRODUCT_ID AS PRODUCT_ID, P.PRODUCT_NAME AS PRODUCT_NAME, SUM(P.PRICE * O.AMOUNT) as TOTAL_SALES
+FROM FOOD_PRODUCT P, FOOD_ORDER O
+WHERE P.PRODUCT_ID = O.PRODUCT_ID                   -- 조인조건
+AND TO_CHAR(O.PRODUCE_DATE, 'YYYY-MM') = '2022-05'  -- 생산일자 2022년 05월
+GROUP BY P.PRODUCT_ID, P.PRODUCT_NAME           -- 식품정보 테이블의 식품 ID와 식품 이름 그룹화
+ORDER BY TOTAL_SALES DESC, P.PRODUCT_ID ASC     -- 총매출을 기준으로 내림차순 정렬, 식품 ID 기준으로 오름차순 정렬
+;    
