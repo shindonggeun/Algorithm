@@ -1,6 +1,6 @@
 # [unrated] 조건에 맞는 사용자와 총 거래금액 조회하기 - 164670 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/164670) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/164670#) 
 
 ### 성능 요약
 
