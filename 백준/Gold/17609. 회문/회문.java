@@ -12,7 +12,6 @@ public class Main {
 		for(int i=0; i<N; i++) {
 			st = new StringTokenizer(br.readLine());
 			String input = st.nextToken();
-			StringBuilder output = new StringBuilder(input);
 			
 			// 투포인터 알고리즘 이용
 			int left = 0;	// 왼쪽에서부터 시작하는 포인터
