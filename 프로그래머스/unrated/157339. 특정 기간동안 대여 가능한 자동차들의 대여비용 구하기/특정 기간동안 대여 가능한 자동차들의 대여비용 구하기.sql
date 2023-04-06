@@ -9,8 +9,8 @@ WITH 차정보 AS (   -- 자동차 종류가 세단과 SUV인것만 뽑아내는
     FROM CAR_RENTAL_COMPANY_RENTAL_HISTORY
     WHERE CAR_ID NOT IN (SELECT DISTINCT CAR_ID   -- 2022-11-01 ~ 2022-11-30의 대여기간을 제외한 나머지 기간의 대여를 한 자동차 아이디를 제외한것을 검색조건으로 해줌(NOT IN)
                          FROM CAR_RENTAL_COMPANY_RENTAL_HISTORY
-                         WHERE TO_CHAR(START_DATE,'YYYY-MM') <= '2022-11'
-                         AND TO_CHAR(END_DATE,'YYYY-MM') >= '2022-11')
+                         WHERE TO_CHAR(START_DATE,'YYYY-MM') <= '2022-11'   -- 대여시작일이 2022년 11월보다 작거나 같으면서(2022년 11월까지 가능)
+                         AND TO_CHAR(END_DATE,'YYYY-MM') >= '2022-11') -- 대여종료일이 2022년 11월보다 크거나 같은 경우
 )
 , 할인정보 AS ( -- 차종류가 세단 또는 SUV면서 대여기간이 30일이상인 할인률 정보를 뽑아내는 임시테이블
     SELECT CAR_TYPE, DISCOUNT_RATE
