@@ -1,0 +1,17 @@
+-- 코드를 입력하세요
+WITH 장바구니_요거트 AS (
+    SELECT DISTINCT(CART_ID)
+    FROM CART_PRODUCTS
+    WHERE NAME = 'Yogurt'
+)
+, 장바구니_우유 AS (
+    SELECT DISTINCT(CART_ID)
+    FROM CART_PRODUCTS
+    WHERE NAME = 'Milk'
+)
+
+SELECT A.CART_ID
+FROM 장바구니_요거트 A, 장바구니_우유 B
+WHERE A.CART_ID = B.CART_ID
+ORDER BY A.CART_ID ASC
+;
