@@ -1,19 +1,39 @@
 import java.util.*;
 
 class Solution {
+    
     public int solution(int[] elements) {
+        int answer = 0;
         Set<Integer> set = new HashSet<>();
-
-        for (int i=1; i<=elements.length; i++) {
-            for (int j=0; j<elements.length; j++) {
-                int sum = 0;
-                for (int k=j; k<j+i; k++) {
-                    sum += elements[k%elements.length];
+        int[] arr = new int[elements.length * 2];
+        for(int i=0; i<arr.length; i++) {
+            arr[i] = elements[i % elements.length];
+        }
+        
+        int count = 1; 
+        
+        // 슬라이딩 윈도우 알고리즘 이용
+        while(true) {
+            int sum = 0;
+            
+            if(count == elements.length+1) {
+                break;
+            }
+            
+            for(int i=0; i<arr.length; i++) {
+                sum+=arr[i];
+                
+                if(i >= count) {
+                    sum-=arr[i-count];
                 }
                 set.add(sum);
             }
+            
+            count++;
         }
-
-        return set.size();
+        //System.out.println(set);
+        answer = set.size();
+        
+        return answer;
     }
 }
