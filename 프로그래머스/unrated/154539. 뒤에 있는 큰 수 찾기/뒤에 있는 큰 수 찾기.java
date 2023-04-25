@@ -9,12 +9,20 @@ class Solution {
         
         // 두번째 원소부터 탐색
         for(int i=1; i<numbers.length; i++) {
-            // 스택이 비어있지 않으면서 현재 스택이 바라보고 있는 값보다 number의 값이 큰 경우까지 반복
-            while(!stack.isEmpty() && numbers[stack.peek()] < numbers[i]) {
-                answer[stack.pop()] = numbers[i];   // 뒤에 있는 큰 수에 해당한다
+            // 스택이 텅빌때까지 반복(비어지면 while문 탈출)
+            while(!stack.isEmpty()) {
+                int idx = stack.pop();  // 스택에서 담겨진 인덱스 뽑음
+                // 뒤의 수가 더 큰 경우
+                if(numbers[i] > numbers[idx]) {
+                    answer[idx] = numbers[i];
+                }
+                // 앞이 더 크거나 같은 경우
+                else {
+                    stack.push(idx);
+                    break;
+                }
             }
-            
-            stack.push(i);  // 현재 인덱스를 스택에 집어넣음
+            stack.push(i);
         }
         
         // 모든 index를 다 탐색한 후 뒤에 있는 큰 수가 없는 경우 -1임
