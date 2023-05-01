@@ -1,35 +1,45 @@
 import java.util.*;
 
 class Solution {
+    
+    static int[] checked;
+    static int maxValue = 100000000;
 
     public int solution(int x, int y, int n) {
-        int count = 0;
+        int answer = 0;
+        checked = new int[maxValue + 1];
+        answer = bfs(x, y, n);
+        return answer;
+    }
+    
+    public static int bfs(int start, int end, int n) {
         Queue<Integer> queue = new LinkedList<>();
-        Set<Integer> visited = new HashSet<>();
-        queue.add(x);
-        visited.add(x);
-        while (!queue.isEmpty()) {
-            int size = queue.size();
-            for (int i = 0; i < size; i++) {
-                int cur = queue.poll();
-                if (cur == y) {
-                    return count;
-                }
-                if (cur + n <= y && !visited.contains(cur + n)) {
-                    queue.add(cur + n);
-                    visited.add(cur + n);
-                }
-                if (cur * 2 <= y && !visited.contains(cur * 2)) {
-                    queue.add(cur * 2);
-                    visited.add(cur * 2);
-                }
-                if (cur * 3 <= y && !visited.contains(cur * 3)) {
-                    queue.add(cur * 3);
-                    visited.add(cur * 3);
-                }
+        queue.add(start);
+        checked[start] = 1;
+        
+        while(!queue.isEmpty()) {
+            int number = queue.poll();
+            
+            if(number == end) {
+                return checked[end] - 1;
             }
-            count++;
+            
+			if(number+n <= end && checked[number+n] == 0) {
+				queue.add(number+n);
+				checked[number+n] = checked[number] + 1;
+			}
+            
+            if(number*2 <= end && checked[number*2] == 0) {
+                queue.add(number*2);
+                checked[number*2] = checked[number] + 1;
+            }
+            
+            if(number*3 <= end && checked[number*3] == 0) {
+                queue.add(number*3);
+                checked[number*3] = checked[number] + 1;
+            }
         }
+        
         return -1;
     }
 }
