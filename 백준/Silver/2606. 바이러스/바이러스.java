@@ -5,7 +5,7 @@ public class Main {
 
 	static int N;	// 컴퓨터의 수 (정점의 개수)
 	static int M;	// 네트워크 상에 직접 연결되어 있는 컴퓨터 쌍의 개수 (간선의 개수)
-	static ArrayList<Integer>[] arr;
+	static ArrayList<ArrayList<Integer>> graph = new ArrayList<>();
 	static boolean[] visited;
 	//static StringBuilder sb;
 	static int count;
@@ -16,13 +16,12 @@ public class Main {
 		
 		N = Integer.parseInt(st.nextToken());
 		M = Integer.parseInt(br.readLine());
-		arr = new ArrayList[N+1];
 		visited = new boolean[N+1];
 		//sb = new StringBuilder();
 		count = 0;
 		
-		for(int i=0; i<arr.length; i++) {
-			arr[i] = new ArrayList<>();
+		for(int i=0; i<=N; i++) {
+			graph.add(new ArrayList<>());
 		}
 		
 		for(int i=0; i<M; i++) {
@@ -30,13 +29,13 @@ public class Main {
 			int a = Integer.parseInt(st.nextToken());	// 시작정점
 			int b = Integer.parseInt(st.nextToken());	// 끝정점
 			
-			// 정점간 간선 연결해주기
-			arr[a].add(b);
-			arr[b].add(a);
+			// 정점간 간선 연결해주기 (양방향 그래프)
+			graph.get(a).add(b);
+			graph.get(b).add(a);
 		}
 		
-		for(int i=0; i<arr.length; i++) {
-			Collections.sort(arr[i]);	// 정점에 연결된 간선들 오름차순 정렬
+		for(int i=1; i<=N; i++) {
+			Collections.sort(graph.get(i));	// 정점에 연결된 간선들 오름차순 정렬
 		}
 		
 		dfs(1);	// 1번 정점에서부터 시작
@@ -51,7 +50,7 @@ public class Main {
 		count++;		// 방분한 정점 개수 증가
 		
 		// 현재 방문한 노드에 해당하는 리스트에 담겨있는 값들 하나씩 뽑아내기
-		for(int i: arr[index]) {
+		for(int i: graph.get(index)) {
 			// 방문안한 노드인 경우
 			if(!visited[i]) {
 				dfs(i);	// 그 노드에 해당하는 리스트들 탐색할 수 있도록 재귀 호출
