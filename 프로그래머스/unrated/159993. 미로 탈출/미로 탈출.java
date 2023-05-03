@@ -65,6 +65,7 @@ class Solution {
     public static int bfs(int startX, int startY, int lengthX, int lengthY, int endX, int endY) {
         Queue<Position> queue = new LinkedList<>();
         queue.add(new Position(startX, startY, 0));
+        visited[startX][startY] = true;
         
         while(!queue.isEmpty()) {
             Position now = queue.poll();
