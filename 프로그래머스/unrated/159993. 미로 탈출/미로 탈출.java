@@ -4,7 +4,7 @@ class Solution {
     static class Position {
         int x, y, distance;
         
-        Position(int x, int y, int distance) {
+        public Position(int x, int y, int distance) {
             this.x = x;
             this.y = y;
             this.distance = distance;
