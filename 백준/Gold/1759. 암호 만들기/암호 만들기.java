@@ -1,76 +1,76 @@
-import java.io.*;
 import java.util.*;
+import java.io.*;
 
 public class Main {
+	
+	static int L;
+	static int C;
+	static char[] arr;
+	static char[] output;
+	static StringBuilder sb = new StringBuilder();
 
-    public static int L, C;
-    public static char[] list;
-    public static char[] code;
-
-    public static void main(String[] args) throws IOException {
-
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        StringBuilder sb = new StringBuilder();
-
-        StringTokenizer st = new StringTokenizer(br.readLine());
-
-        L = Integer.parseInt(st.nextToken());
-        C = Integer.parseInt(st.nextToken());
-
-        list = new char[C];
-        code = new char[L];
-
-        st = new StringTokenizer(br.readLine());
-
-        for (int x = 0; x < C; x++) {
-            list[x] = st.nextToken().charAt(0);
-        }
-
-
-        // 정렬
-        Arrays.sort(list);
-
-        makeCode(0,0);
-
-    }
-
-    public static void makeCode(int x,int idx) {
-
-
-        if (idx == L) {
-            // 최소 한개의 모음, 최소 2개의 자음인지 확인
-            if (isValid()) {
-                System.out.println(code);
-            }
-            return;
-        }
-
-        // 아직 길이 L의 코드를 만들지 않았고 글자도 아직 남았다.
-
-        for (int i = x; i < C; i++) {
-            code[idx] = list[i];
-            makeCode(i+1, idx + 1);
-        }
-    }
-
-    // 최소 모음 1개, 최소 자음 2개인지 확인
-    public static boolean isValid() {
-        int mo = 0;
-        int ja = 0;
-
-        for (char x : code) {
-            if (x == 'a' || x == 'e' || x == 'i' || x == 'o' || x == 'u') {
-                mo++;
-            } else {
-                ja++;
-            }
-        }
-
-        if (mo >= 1 && ja >= 2) {
-            return true;
-        }
-        return false;
-    }
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		
+		L = Integer.parseInt(st.nextToken());
+		C = Integer.parseInt(st.nextToken());
+		
+		arr = new char[C];
+		output = new char[L];
+		
+		st = new StringTokenizer(br.readLine());
+		
+		for(int i=0; i<C; i++) {
+			arr[i] = st.nextToken().charAt(0);
+		}
+		// 입력받은 문자들을 오름차순 정렬해줌 
+		// 백트래킹 이용해서 암호 만들 때 사전순으로 암호 만들기 위해
+		Arrays.sort(arr);	
+		
+		backTracking(0, 0);
+		System.out.print(sb);
+	}
+	
+	// 조합 메서드 이용
+	public static void backTracking(int depth, int idx) {
+		if(depth == L) {
+			if(isValid()) {
+				String str = new String(output);
+				sb.append(str).append("\n");
+			}
+			return;
+		}
+		
+		for(int i=idx; i<C; i++) {
+			output[depth] = arr[i];
+			backTracking(depth+1, i+1);
+		}
+	}
+	
+	// 최소 모음 1개 이상 자음 2개 이상으로 이루어졌는지 확인하는 메서드
+	public static boolean isValid() {
+		int moCount = 0;	// 모음개수
+		int jaCount = 0;	// 자음개수
+		
+		for(char ch: output) {
+			// 모음인경우
+			if(ch == 'a' || ch == 'e' || ch == 'i' || ch == 'o' || ch == 'u') {
+				moCount++;
+			}
+			// 자음인경우
+			else {
+				jaCount++;
+			}
+		}
+		
+		// 모음개수가 1개이상이면서 자음개수가 2개이상인 경우 true 반환 
+		if(moCount >= 1 && jaCount >= 2) {
+			return true;
+		}
+		
+		// 그 이외의 경우는 false 반환
+		return false;
+	}
 
 }
