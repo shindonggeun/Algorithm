@@ -22,7 +22,7 @@ public class Main {
 			}
 			// 강의 시작시간이 같은경우 강의 종료시간을 기준으로 오름차순 정렬
 			else {
-				return this.startTime - t.startTime;
+				return this.endTime - t.endTime;
 			}
 				
 		}
