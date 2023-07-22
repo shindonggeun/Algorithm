@@ -53,10 +53,12 @@ class Solution {
         }
         // 4. 두 주사위에서 나온 숫자가 서로 같고(p) 나머지 두 주사위는 서로 각각 다른 숫자인 경우(q, r)
         else if(map.size() == 3) {
-            List<Integer> list = new ArrayList<>();
+            List<Integer> list = new ArrayList<>(); // p와 q를 저장할 ArrayList
+            // 맵에 저장된 key값들 순회
             for(int num: map.keySet()) {
+                // key값에 해당하는 value값이 1인 경우(즉, 주사위 나온 횟수가 1인 경우)
                 if(map.get(num) == 1) {
-                    list.add(num);
+                    list.add(num);  // 리스트에 추가
                 }
             }
             answer = list.get(0) * list.get(1); // q * r
