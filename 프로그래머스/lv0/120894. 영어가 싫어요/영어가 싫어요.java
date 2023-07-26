@@ -3,6 +3,7 @@ class Solution {
         long answer = 0;
         
         // 문자열에서 문자열로 변환
+        // 문자열.replace("해당 문자열", "바꿀 문자열"); -> return값은 String으로
         numbers = numbers.replace("zero", "0");     // 문자열에서 "zero" 인것은 "0"으로 치환(변환)
         numbers = numbers.replace("one", "1");      // 문자열에서 "one" 인것은 "1"로 치환(변환)
         numbers = numbers.replace("two", "2");      // 문자열에서 "two" 인것은 "2"로 치환(변환)
