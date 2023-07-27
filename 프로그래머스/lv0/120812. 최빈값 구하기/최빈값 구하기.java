@@ -6,11 +6,12 @@ class Solution {
         Map<Integer, Integer> map = new HashMap<>();    // key: 해당 숫자, value: 해당 숫자가 나온 횟수
         
         for(int i=0; i<array.length; i++) {
-            // mag.getOrDefault()메서드를 이용해 해당 숫자가 나올때마다 횟수를 늘려준다
+            // map.getOrDefault()메서드를 이용해 해당 숫자가 나올때마다 횟수를 늘려준다
             map.put(array[i], map.getOrDefault(array[i], 0) + 1);
         }
         
         List<Integer> list = new ArrayList<>(map.values()); // map에 저장된 value값들 리스트화
+        //System.out.println(list);
         Collections.sort(list, Collections.reverseOrder()); // 내림차순 정렬
         
         List<Integer> resultList = new ArrayList<>();       // 최빈값들 저장한 리스트
