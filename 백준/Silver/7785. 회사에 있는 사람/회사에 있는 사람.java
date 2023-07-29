@@ -1,5 +1,5 @@
-import java.io.*;
 import java.util.*;
+import java.io.*;
 
 public class Main {
 
@@ -8,29 +8,37 @@ public class Main {
 		StringTokenizer st = new StringTokenizer(br.readLine());
 		
 		int N = Integer.parseInt(st.nextToken());
-		Map<String, String> map = new HashMap<>();
-		List<String> nameList = new ArrayList<>();
+		Set<String> set = new HashSet<>();	// 출입기록을 담은 HashSet 이용
+		
 		for(int i=0; i<N; i++) {
-			st = new StringTokenizer(br.readLine(), "\n");
-			String str = st.nextToken();
-			String[] str_arr = str.split(" ");
-			map.put(str_arr[0], str_arr[1]);
-		}
-		
-		
-		for(String key: map.keySet()) {
-			if(map.get(key).equals("enter")) {
-				nameList.add(key);
+			st = new StringTokenizer(br.readLine());
+			
+			String name = st.nextToken();
+			String enterOrOut = st.nextToken();
+			
+			// 출근인 경우
+			if(enterOrOut.equals("enter")) {
+				set.add(name);
+			}
+			// 퇴근인 경우
+			else if(enterOrOut.equals("leave")) {
+				// 출입기록(즉, 출근 기록이 있는 경우)
+				if(set.contains(name)) {
+					set.remove(name);	// 퇴근처리(출근 기록에서 삭지)
+				}
 			}
 		}
 		
-		Collections.sort(nameList, Collections.reverseOrder());
+		List<String> list = new ArrayList<>(set);	// HashSet을 ArrayList화
+		Collections.sort(list, Collections.reverseOrder());		// 사전순의 역순으로 정렬
 		StringBuilder sb = new StringBuilder();
 		
-		for(String name: nameList) {
-			sb.append(name).append("\n");
+		for(String str: list) {
+			sb.append(str).append("\n");
 		}
-		System.out.println(sb);
-    }
-	
+		System.out.print(sb);
+		
+
+	}
+
 }
