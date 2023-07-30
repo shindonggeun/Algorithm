@@ -5,34 +5,29 @@ public class Main {
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
+		int N = Integer.parseInt(br.readLine());
 		
-		int N = Integer.parseInt(st.nextToken());
-		Map<String, Integer> map = new HashMap<>();	// key: 책 이름, value: 책 팔린 수
+		Map<String, Integer> map = new HashMap<>();	// key: 책 이름, value: 책이 팔린 횟수
 		
 		for(int i=0; i<N; i++) {
-			st = new StringTokenizer(br.readLine());
-			String book = st.nextToken();
-			
-			map.put(book, map.getOrDefault(book, 0) + 1);
+			String input = br.readLine();	// 책 이름 입력받기	
+			map.put(input, map.getOrDefault(input, 0) + 1);
 		}
 		
-		List<Integer> value_list = new ArrayList<>(map.values());		// value값들 리스트에 저장
-		List<String> book_list = new ArrayList<>(map.keySet());			// key값들을 리스트에 저장
-		Collections.sort(book_list);	// 오름차순 정렬
+		List<Integer> sellList = new ArrayList<>(map.values());	// 책 판 횟수를 저장한 리스트(value값 리스트화)
+		Collections.sort(sellList, Collections.reverseOrder());	// 책 판 횟수 내림차순 정렬
+		List<String> bookList = new ArrayList<>();	// 책 가장 많이 팔린것들 저장할 리스트
 		
-		StringBuilder sb = new StringBuilder();
-		
-		for(String key: book_list) {
-			// value값이 max값인 경우(제일 책 많이 팔린 경우)
-			if(map.get(key) == Collections.max(value_list)) {
-				sb.append(key);
-				break;
+		// map에 저장된 key값(책 이름) 탐색하기
+		for(String book: map.keySet()) {
+			// 해당 책이 가장 많이 팔렸으면
+			if(map.get(book) == sellList.get(0)) {
+				bookList.add(book);	// 책 가장 많이 팔린 리스트에 추가해줌
 			}
 		}
-		System.out.println(sb);
 		
-
+		Collections.sort(bookList);	// 사전순으로 정렬
+		System.out.println(bookList.get(0));
 	}
 
 }
