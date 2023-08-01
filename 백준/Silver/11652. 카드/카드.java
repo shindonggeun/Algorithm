@@ -5,35 +5,29 @@ public class Main {
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
+		int N = Integer.parseInt(br.readLine());
 		
-		int N = Integer.parseInt(st.nextToken());
-		Map<Long, Integer> map = new HashMap<>();	// key: 숫자카드, value: 가지고있는 숫자카드 수
-		
+		// key값이 Long인 이유는 숫자카드가 -2^62 ~ 2^62 범위로 주어졌기 때문에
+		Map<Long, Integer> map = new HashMap<>();	// key: 해당 숫자 카드, value: 해당 숫자카드 개수
 		for(int i=0; i<N; i++) {
-			st = new StringTokenizer(br.readLine());
-			long card = Long.parseLong(st.nextToken());
-			
-			map.put(card, map.getOrDefault(card, 0) + 1);
+			long cardNum = Long.parseLong(br.readLine());	// 해당 숫자 카드 입력
+			map.put(cardNum, map.getOrDefault(cardNum, 0) + 1);	// 해당 카드 숫자가 나올때마다 +1씩 개수 카운트 해주도록 설정
 		}
 		
-		List<Long> key_list = new ArrayList<>(map.keySet());	// key값들 list화
-		Collections.sort(key_list);		// 오름차순 정렬
+		// Collections.max() 메서드 활용해보기
+		int maxCount = Collections.max(map.values());	// map에 저장된 value값들에서 최대값 뽑기
+		List<Long> list = new ArrayList<>();	// 해당 숫자카드가 가장 많이 나온 것들 리스트에 저장해주게끔 리스트 선언	
 		
-		List<Integer> value_list = new ArrayList<>(map.values());	// value값들 list화
-		int max = Collections.max(value_list);	// max값 뽑기
-		StringBuilder sb = new StringBuilder();
-		
-		// 가장 많이 가지고있는 숫자카드 뽑아내기
-		for(long key: key_list) {
-			if(map.get(key) == max) {
-				sb.append(key);
-				break;
+		// map에 저장된 키값들 탐색
+		for(long cardNum: map.keySet()) {
+			// 숫자카드가 가장 많이 나온것인 경우
+			if(map.get(cardNum) == maxCount) {
+				list.add(cardNum);	// 리스트에 추가
 			}
 		}
 		
-		System.out.println(sb);
-
+		Collections.sort(list);	// 리스트 오름차순 정렬
+		System.out.println(list.get(0));	
 	}
 
 }
