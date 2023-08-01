@@ -5,14 +5,11 @@ public class Solution {
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		
-		int testCase = Integer.parseInt(st.nextToken());
+		int testCase = Integer.parseInt(br.readLine());
 		StringBuilder sb = new StringBuilder();
 		
 		for(int tc=1; tc<=testCase; tc++) {
-			st = new StringTokenizer(br.readLine());
-			int N = Integer.parseInt(st.nextToken());
+			int N = Integer.parseInt(br.readLine());
 			int[][] map = new int[N][N];	// (0, 0) ~ (N-1, N-1)
 			
 			for(int i=0; i<N; i++) {
@@ -22,30 +19,31 @@ public class Solution {
 				}
 			}
 			
+			int start = N/2;	// 시작 인덱스
+			int end = N/2;		// 끝 인덱스
 			int sum = 0;
-			int start = N/2;
-			int end = N/2;
 			
 			for(int i=0; i<N; i++) {
 				for(int j=start; j<=end; j++) {
 					sum += map[i][j];
 				}
 				
-				// 행(행의 인덱스 번호)이 절반 전인 경우
+				// 행(행의 인덱스 번호)이 절반 미만인 경우
 				if(i < N/2) {
-					// 위로 갈수록 열의 범위를 늘림
+					// 아래로 갈수록(즉 행의 번호가 증가할 수록) 열의 범위를 늘려줌
 					start -= 1;
 					end += 1;
 				}
-				// 행(행의 인덱스 번호)이 절반 이후인 경우
-				else if(i >= N/2){
-					// 아래로 갈수록 열의 범위를 좁힌다
-					start += 1;	// 시작 인덱스 증가
-					end -=1;	// 끝 인덱스 감소
+				// 행(행의 인덱스 번호)이 절반 이상인 경우
+				else if(i >= N/2) {
+					// 아래로 갈수록 (즉 행의 번호가 증가할 수록) 열의 범위를 줄여줌
+					start += 1;
+					end -= 1;
 				}
 			}
-			sb.append("#" + tc + " " + sum).append("\n");
+			sb.append("#").append(tc).append(" ").append(sum).append("\n");
 		}
+		
 		System.out.print(sb);
 	}
 
