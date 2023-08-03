@@ -5,35 +5,42 @@ public class Main {
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
+		int N = Integer.parseInt(br.readLine());
+		Stack<Integer> stack = new Stack<>();
 		
-		int n = Integer.parseInt(st.nextToken());
-		Stack<Integer> stack = new Stack<>();	
+		int start = 0;	// 시작변수 지정 
 		StringBuilder sb = new StringBuilder();
-		int start = 0;	// 시작변수
+		boolean find = false;	// 스택수열 만들 수 있는지 없는지 판단해주는 변수
 		
-		while(n-- > 0) {
-			st = new StringTokenizer(br.readLine());
-			int num = Integer.parseInt(st.nextToken());	// 입력 받은 숫자
+		for(int i=0; i<N; i++) {
+			int num = Integer.parseInt(br.readLine());	// 입력받은 숫자
 			
-			// 입력 받은 수가 시작변수보다 큰 경우
+			// 입력받은 숫자가 시작변수보다 큰 경우
 			if(num > start) {
-				// 시작변수+1부터 입력 받은 수까지 stack에 집어넣음
-				for(int i=start+1; i<=num; i++) {
-					stack.push(i);
-					sb.append("+").append("\n");	// push() 표시
+				// 시작변수+1부터 시작해서 입력받은 숫자까지 stack에 push해줌
+				for(int k=start+1; k<=num; k++) {
+					stack.push(k);
+					sb.append("+").append("\n");	// 스택 push 표시 StringBuilder에 저장
 				}
-				start = num;	// 입력 받은 수를 시작변수로 초기화
+				// 위의 과정을 거쳐 스택에 다 저장했으면 입력받은 수를 시작변수로 초기화해줌
+				start = num;	
 			}
-			// stack의 최상단 수가 입력 받은 수가 아닌 경우 (입력된  수열을 만들 수 없는 경우임)
-			else if(stack.peek() != num) {
-				System.out.println("NO");	
-				return;		// 프로그램 종료
+			// 스택의 최상단 수가 입력 받은 수가 아닌 경우 (입력된 수열을 만들 수 없는 경우)
+			else if(stack.peek() != num){
+				find = true;	// 스택수열 만들 수 없음
 			}
 			
-			stack.pop();	
-			sb.append("-").append("\n");	// 스택에서 pop() 표시
+			stack.pop();	// 스택에 최상단에 저장된 숫자 빼냄
+			sb.append("-").append("\n");
 		}
+		
+		// 스택수열 만들 수 없는 경우
+		if(find) {
+			System.out.println("NO");	// 입력된 수열 만들 수 없으므로 "NO" 출력한 뒤
+			return;	// 메인 메서드 종료
+		}
+		
+		// 스택수열 만들 수 있으면 StringBuilder 출력
 		System.out.print(sb);
 
 	}
