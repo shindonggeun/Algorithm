@@ -10,29 +10,6 @@ class Solution {
             answer[i] = convert;   
         }
         
-        /*for(int i=0; i<n; i++) {
-            String binary1 = Integer.toBinaryString(arr1[i]);
-            String binary2 = Integer.toBinaryString(arr2[i]);
-            
-            // 문자열.repeat(반복할 횟수) 
-            // "0".repeat(3) -> "000"
-            binary1 = "0".repeat(n - binary1.length()) + binary1;
-            binary2 = "0".repeat(n - binary2.length()) + binary2;
-            // split() 함수를 이용하여 문자열 배열에 집어넣음
-            String[] biArr1 = binary1.split("");    
-            String[] biArr2 = binary2.split("");
-            StringBuilder sb = new StringBuilder();           
-            for(int j = 0; j < n; j++) {
-                if(biArr1[j].equals("1") || biArr2[j].equals("1")) {
-                    sb.append("#");
-                } else {
-                    sb.append(" ");
-                }    
-            }   
-            answer[i] = sb.toString();
-            
-        }*/
-        
         return answer;
     }
 }
