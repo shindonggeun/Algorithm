@@ -19,8 +19,7 @@ class Solution {
     static int maxArea;    //  그림에서 가장 큰 영역을 나타내는 변수
     
     public int[] solution(int m, int n, int[][] picture) {
-        int[] answer = new int[2];  // [0] => 그림에 몇개의 영역이 있는지, [1] => 가장 큰 영역의 칸 수
-        int areaCount = 0;  // 그림에서 몇 개의 영역이 있는 지를 나타내는 변수      
+        int[] answer = new int[2];  // [0] => 그림에 몇개의 영역이 있는지, [1] => 가장 큰 영역의 칸 수   
         visited = new boolean[m][n];    // (0, 0) ~ (n-1, m-1)
         areaCount = 0;
         maxArea = Integer.MIN_VALUE;
