@@ -46,6 +46,7 @@ class Solution {
         
         answer = new int[list.size()];
         
+        // list에 저장된 값 배열로
         for(int i=0; i<answer.length; i++) {
             answer[i] = list.get(i);
         }
