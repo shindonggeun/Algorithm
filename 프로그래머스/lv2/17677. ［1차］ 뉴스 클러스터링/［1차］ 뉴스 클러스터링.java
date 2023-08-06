@@ -65,6 +65,7 @@ class Solution {
             double jakad = (double)(intersectionList.size()) / (double)(unionList.size());
             answer = (int) (jakad * 65536); // 소수점 아래 버리고 정수부만 출력할 수 있게끔
         }
+        
         return answer;
     }
 }
