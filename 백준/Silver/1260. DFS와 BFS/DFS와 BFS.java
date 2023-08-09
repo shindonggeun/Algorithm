@@ -48,7 +48,7 @@ public class Main {
 		System.out.println(sb);
 	}
 	
-	// 깊이우선탐색
+	// 깊이우선탐색 메서드
 	public static void dfs(int vertex) {
 		visited[vertex] = true;
 		sb.append(vertex).append(" ");	// 현재 방문한 정점 StringBuilder에 저장
@@ -62,6 +62,7 @@ public class Main {
 		}
 	}
 	
+	// 너비우선탐색 메서드
 	public static void bfs(int vertex) {
 		visited[vertex] = true;
 		Queue<Integer> queue = new LinkedList<>();	// 너비우선탐색시 필요한 큐 선언
