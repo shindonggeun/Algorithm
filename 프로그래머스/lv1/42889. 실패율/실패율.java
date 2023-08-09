@@ -1,53 +1,49 @@
 import java.util.*;
 
 class Solution {
-
     public int[] solution(int N, int[] stages) {
         int[] answer = new int[N];  
-        double[] stage_human = new double[N];   // 각 스테이지에 머물러있는 사용자 수을 담은 배열
-        double[] fail = new double[N];          // 각 스테이지에 따른 실패율을 담은 배열
+        int[] stageHumanArr = new int[N+1];   // 각 스테이지에 머물러 있는 사람들을 저장한 배열
+                                              // [1] = 1번 스테이지에 머물러 있는 사람
+        double[] failArr = new double[N+1]; // 각 스테이지마다 실패율을 저장한 배열 ([1] = 1번 스테이지 실패율)
         
-        HashMap<Integer, Double> map = new HashMap<>();  // 스테이지 번호가 Key, 실패율이 value
-        
-        double human_num = stages.length;       // 총 사용자 수
-        
-        // 각 스테이지 반복
         for(int stage: stages) {
             // 스테이지개수 + 1 한것이 아직 클리어하지 못한 스테이지(스테이지 배열에서 최종 스테이지)와 같은 경우
+            // 즉, 마지막 스테이지(N번째 스테이지) 까지 클리어한 사용자를 나타내므로 최종 스테이지에 머물러 있지 않다
             if(stage == N+1) {
-                continue;
+                continue;   // 넘어감
             }
-            stage_human[stage-1]++;     // 각 스테이지에 머물러 있는 사용자 수 증가
-                                        // 배열은 0번방부터 시작하므로 stage - 1
+            stageHumanArr[stage]++; // 해당 스테이지에 머물러있는 사람 증가
         }
-        //System.out.println(Arrays.toString(stage_human));
         
-        // 스테이지 개수만큼 반복문 돌리기
-        for(int i=0; i<N; i++) {
-            // 스테이지의 머물러 있는 사용자수가 0인 경우
-            if(stage_human[i] == 0) {
-                fail[i] = 0.0;  // 실패율 0으로 세팅
+        Map<Integer, Double> map = new HashMap<>(); // key: 스테이지 번호, value: 실패율
+        int humanNum = stages.length;    // 총 사용자 수
+        for(int i=1; i<=N; i++) {
+            // 해당 스테이지에 머물러 있는 사람이 없는 경우
+            if(stageHumanArr[i] == 0) {
+                failArr[i] = 0.0;   // 해당 스테이지번호에 따른 실패율 0으로 저장
             }
-            // 스테이지의 머무러 있는 사용자수가 0이 아닌 경우
             else {
-                fail[i] = stage_human[i] / human_num;   // 실패율 계산   
-            }      
-            human_num = human_num - stage_human[i];
-            map.put(i+1, fail[i]);  // hashmap에 세팅 (key: 스테이지 번호, value: 실패율)
+                failArr[i] = (double)stageHumanArr[i] / humanNum;   // 해당 스테이지에 따른 실패율 저장
+            }
+            humanNum -= stageHumanArr[i];   // 총 사용자 수에서 해당 스테이지에 머무른 사람 수 빼주기
+            map.put(i, failArr[i]); // 맵에 해당 스테이지 번호와 해당 스테이지에 따른 실패율 저장
         }
-        //System.out.println(Arrays.toString(fail));
-        //System.out.println(map);
-        List<Integer> list = new ArrayList<>(map.keySet()); // map의 key값을 list에 세팅
-        //System.out.println(list);
-        Collections.sort(list, (a, b) -> Double.compare(map.get(b), map.get(a)));   // map의 value값 기준으로 내림차순 정렬
-        //System.out.println(list);
+        List<Integer> list = new ArrayList<>(map.keySet()); // 맵의 key값을 ArrayList에 세팅
+        Collections.sort(list, new Comparator<Integer>() {
+            @Override
+            public int compare(Integer key1, Integer key2) {
+                // 맵에 저장된 value값(실패율)을 기준으로 내림차순 정렬해서 
+                // 정렬한 실패율에 맞는 스테이지 번호를 정렬해준다
+                // 실패율은 double타입이므로 Double.compare()를 이용한다
+                return Double.compare(map.get(key2), map.get(key1));
+            }
+        });
         
-        // Integer ArrayList을 int 배열로 변환
-        answer = list.stream()
-                .mapToInt(Integer::intValue)
-                .toArray();
-        
+        // 최종으로 answer배열에 값 넣어주기
+        for(int i=0; i<answer.length; i++) {
+            answer[i] = list.get(i);
+        }
         return answer;
     }
-
 }
