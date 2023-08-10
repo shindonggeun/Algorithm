@@ -39,7 +39,7 @@ public class Solution {
 			visited = new boolean[9];	// 방문배열 초기화
 			backTracking(0);
 			
-			sb.append("#").append(tc).append(" ").append(winK + " " + loseK).append("\n");
+			sb.append("#").append(tc).append(" ").append(winK).append(" ").append(loseK).append("\n");
 		}
 		System.out.print(sb);
 
