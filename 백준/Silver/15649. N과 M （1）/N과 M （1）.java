@@ -2,10 +2,10 @@ import java.util.*;
 import java.io.*;
 
 public class Main {
-	
-	public static boolean[] visit;
-	public static int[] arr;
-	public static StringBuilder sb = new StringBuilder();
+
+	static boolean[] visited;
+	static int[] arr;
+	static StringBuilder sb = new StringBuilder();
 	
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -13,17 +13,17 @@ public class Main {
 		int N = Integer.parseInt(st.nextToken());
 		int M = Integer.parseInt(st.nextToken());
 		
-		visit = new boolean[N];
-		arr = new int[M];
-		dfs(N, M, 0);
+		visited = new boolean[N];	// 방문배열 선언
+		arr = new int[M];			// 해당 숫자들 저장할 변수 (M 길이)
 		
+		backTracking(N, M, 0);
 		System.out.print(sb);
-		
-
 	}
 	
-	public static void dfs(int N, int M, int depth) {
-		
+	// 백트래킹 메서드 (가지치기)
+	// 순열 메서드
+	public static void backTracking(int N, int M, int depth) {
+		// 해당 깊이가 조건에 만족된 경우(즉, 수열의 길이가 M이 되면)
 		if(depth == M) {
 			for(int val: arr) {
 				sb.append(val).append(" ");
@@ -33,17 +33,14 @@ public class Main {
 		}
 		
 		for(int i=0; i<N; i++) {
-			// 만약 해당 노드(값)을 방문하지 않은경우
-			if(!visit[i]) {
-				visit[i] = true;		// 해당 노드를 방문상태로 변경
-				arr[depth] = i+1;		// 해당 깊이를 index로 하여 i+1 값 저장
-				dfs(N, M, depth + 1);	// 다음 자식 노드 방문을 위해 depth를 1 증가시키면서 재귀 호출함
-				
-				// 자식노드 방문이 끝나고 돌아오면 방문노드를 방문하지 않은 상태로 변경
-				visit[i] = false;
+			// 만약 해당 수를 선택하지 않은 경우
+			if(!visited[i]) {
+				visited[i] = true;	// 방문처리 해준 뒤
+				arr[depth] = i+1;	// 배열에 해당 수를 저장한 뒤
+				backTracking(N, M, depth+1);	// backTracking() 메서드 재귀 호출 (depth 증가해줌)
+				visited[i] = false;	// 방문처리 해제 
 			}
 		}
-		return;
 	}
 
 }
