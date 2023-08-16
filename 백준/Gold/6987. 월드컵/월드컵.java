@@ -26,7 +26,7 @@ public class Main {
 			}
 			
 			matchGame = new int[totalGameCount][2];	// 경기 매치별 게임 수
-			int idx = 0;	// 게임 매치별 인덱스
+			int idx = 0;	// 게임 매치별 인덱스 (15게임 경기별 인덱스)
 			
 			// i, j => 0번 = A, ... , 5번 = F 
 			for(int i=0; i<nationCount-1; i++) {
