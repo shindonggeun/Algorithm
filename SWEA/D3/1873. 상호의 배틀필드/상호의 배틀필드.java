@@ -37,7 +37,7 @@ public class Solution {
 			
 			int N = Integer.parseInt(br.readLine());
 			String command = br.readLine();
-			int idx = stateIdx(map[startX][startY]);
+			int idx = stateIdx(map[startX][startY]);	// 해당 시작 상태 인덱스 뽑아내기
 			
 			for(int i=0; i<N; i++) {
 				char value = command.charAt(i);
@@ -144,11 +144,7 @@ public class Solution {
 								break;	// while문 빠져나옴
 							}
 						}
-					}
-					default: {
-						break;
-					}
-						
+					}	
 				}
 			}
 			
