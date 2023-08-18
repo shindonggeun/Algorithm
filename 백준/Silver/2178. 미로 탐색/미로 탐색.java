@@ -3,66 +3,91 @@ import java.io.*;
 
 public class Main {
 	
-	static int N;
-	static int M;
+	// 좌표 및 이동한 거리를 저장해주는 내부 클래스
+	static class Position {
+		int x;
+		int y;
+		int distance;
+		
+		public Position(int x, int y, int distance) {
+			this.x = x;
+			this.y = y;
+			this.distance = distance;
+		}
+	}
+	
+	static int N;	// 행의 개수
+	static int M;	// 열의 개수
 	static int[][] map;
 	static boolean[][] visited;
-	static int[] dx = {-1, 1, 0, 0};	// x 방향배열 (상하)
-	static int[] dy = {0, 0, -1, 1};	// y 방향배열 (좌우)
 	
+	// 4가지 방향 배열 (상, 하, 좌, 우) -> 배열에서는 하, 상, 좌, 우
+	static int[] dx = {1, -1, 0, 0};	// x축이 고정되어 있을 때 y좌표가 움직이는 방향 배열 (상, 하)
+	static int[] dy = {0, 0, -1, 1};	// y축이 고정되어 있을 때 x좌표가 움직이는 방향 배열 (좌, 우)
+
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
 		
 		N = Integer.parseInt(st.nextToken());
 		M = Integer.parseInt(st.nextToken());
-		map = new int[N][M];
+		
+		map = new int[N][M];	// (0, 0) ~ (M-1, N-1) -> [0][0] ~ [N-1][M-1]
 		visited = new boolean[N][M];
 		
 		for(int i=0; i<N; i++) {
-			st = new StringTokenizer(br.readLine());
-			String input = st.nextToken();
+			String input = br.readLine();
 			for(int j=0; j<M; j++) {
 				map[i][j] = input.charAt(j) - '0';
 			}
 		}
 		
-		bfs(0, 0);	// 좌표 (0, 0)에서부터 탐색 시작
-		System.out.println(map[N-1][M-1]);	// 끝 좌표에 갈 수 있는 최단거리 수
+		int minDistance = bfs(0, 0);	// 시작위치 (0, 0)부터 너비우선탐색 시작
+		System.out.println(minDistance);
 	}
 	
-	// 너비우선탐색 알고리즘 이용(깊이우선탐색 알고리즘 이용시 Stack Overflow 발생)
-	public static void bfs(int x, int y) {
-		Queue<int[]> queue = new LinkedList<>();
-		queue.add(new int[] {x, y});
+	// 너비우선탐색 메서드
+	public static int bfs(int startX, int startY) {
+		Queue<Position> queue = new LinkedList<>();
+		queue.add(new Position(startX, startY, 1));	// 큐에 해당 시작좌표와 거리 정보 넣음
+		visited[startX][startY] = true;	// 시작좌표 방문처리
 		
+		// 큐가 빌때까지 반복
 		while(!queue.isEmpty()) {
-			int[] now = queue.poll();
-			int nowX = now[0];
-			int nowY = now[1];
+			Position now = queue.poll();
+			int nowX = now.x;
+			int nowY = now.y;
+			int nowDistance = now.distance;
 			
-			// 상, 하, 좌, 우 이렇게 네가지 방향 탐색
+			// 끝 좌표에 도달한 경우
+			if(nowX == N-1 && nowY == M-1) {
+				return nowDistance;	// 이동한 거리 반환
+			}
+			
+			// 4가지 방향 탐색 (상, 하, 좌, 우) -> 배열에서는 하, 상, 좌, 우
 			for(int i=0; i<4; i++) {
 				int nextX = nowX + dx[i];
 				int nextY = nowY + dy[i];
 				
-				// 이동한 x, y좌표가 범위를 벗어난 경우 (음수좌표 또는 (N-1, M-1) 좌표 넘어간 경우)
-				// 맵의 좌표는 (0,0) ~ (N-1, M-1) 까지이다
+				// 탐색한 좌표가 (0, 0) ~ (M-1, N-1) -> [0][0] ~ [N-1][M-1] 이외의 좌표를 탐색한 경우 
 				if(nextX < 0 || nextY < 0 || nextX >= N || nextY >= M) {
-					continue;
+					continue;	// 넘어감
 				}
 				
-				// 방향 탐색한 좌표가 이미 방문했거나 또는 벽으로 막힌 경우
+				// 이미 방문한 좌표거나 또는 이동할 수 없는 칸(0)인 경우
 				if(visited[nextX][nextY] || map[nextX][nextY] == 0) {
-					continue;
+					continue;	// 넘어감
 				}
 				
-				queue.add(new int[] {nextX, nextY});
-				// 원래 좌표값((0,0) 좌표에서 탐색한 좌표까지 거리)에서 +1 하여 방향 탐색한 좌표에 저장
-				map[nextX][nextY] = map[nowX][nowY] + 1;	
-				visited[nextX][nextY] = true;	// 해당 좌표 방문처리
+				queue.add(new Position(nextX, nextY, nowDistance+1));
+				visited[nextX][nextY] = true;	// 탐색한 좌표 방문처리
 			}
+			
 		}
+		
+		// 너비우선탐색을 다 거쳤는데도 끝 좌표에 도달하지 못한 경우 0 반환 
+		// 근데 문제에서 도착위치로 이동할 수 있는 경우만 입력으로 주어진다고 했으므로 여기 과정은 거치지 않는다
+		return 0;
 	}
 
 }
