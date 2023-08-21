@@ -38,6 +38,7 @@ public class Main {
 				stack.push(new WorkInfo(workScore, T, 1));	// 스택에 해당 업무 정보 저장 (업무 받자마자 바로 시작하므로 clearTime 1로 세팅)
 			}
 			
+			// 스택이 비어있지 않은 경우
 			if(!stack.isEmpty()) {
 				WorkInfo tempWork = stack.peek();	// 스택에서 최상단에 저장된 값 확인 (최신업무 확인)
 				// 업무 해결하는데 걸리는 시간과 업무 지금까지 한 시간과 같은 경우 (즉, 업무 끝냈는지 여부 확인)
