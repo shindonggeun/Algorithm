@@ -9,9 +9,11 @@ class Solution {
         boolean[] visited = new boolean[cards.length];
         pq = new PriorityQueue<>(Collections.reverseOrder());    // 우선순위 큐 선언 및 생성 (우선순위값은 숫자 높은게 높음)
         
+        // 0번(1번)부터 상자에 담긴 카드에 적힌 숫자 뽑기 
         for(int i=0; i<cards.length; i++) {
+            // 방문안한 상자인 경우
             if(!visited[i]) {
-                dfs(cards, i, visited, 0);
+                dfs(cards, i, visited, 0);  // 깊이우선탐색 실시
             }
         }
         
