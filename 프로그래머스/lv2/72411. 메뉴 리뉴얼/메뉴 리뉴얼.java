@@ -34,6 +34,7 @@ class Solution {
         Collections.sort(resultList);   // 오름차순 정렬
         answer = new String[resultList.size()];
         
+        // ArrayList -> 배열로 변환
         for(int i=0; i<answer.length; i++) {
             answer[i] = resultList.get(i);
         }
