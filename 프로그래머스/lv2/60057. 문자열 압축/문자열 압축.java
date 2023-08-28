@@ -23,35 +23,43 @@ class Solution {
             sb = new StringBuilder();   
             int leftIdx = 0;    // 왼쪽 부분 인덱스
             int rightIdx = leftIdx + i; // 오른쪽 부분 인덱스
-            int duplicateCount = 1; // 문자열 반복해서 나타난 횟수 
+            int duplicateCount = 1; // 문자열 압축했을 때 문자 반복해서 나타난 횟수 
             
             String compressStr1 = s.substring(leftIdx, rightIdx);   // 왼쪽부분 문자열 압축
             sb.append(compressStr1);    // StringBuilder에 왼쪽부분 문자열 압축한것 저장
             
+            // 오른쪽부분 인덱스 문자열 s 길이까지 탐색할 수 있도록
             while(rightIdx + i <= s.length()) {
-                String compressStr2 = s.substring(rightIdx, rightIdx+i);
+                String compressStr2 = s.substring(rightIdx, rightIdx+i);    // 오른쪽부분 문자열 압축
+                
+                // 왼쪽부분과 오른쪽 부분 문자열 압축한게 서로 같지 않은 경우
                 if(!compressStr1.equals(compressStr2)) {
-                    compressStr1 = compressStr2;
+                    compressStr1 = compressStr2;    // 왼쪽부분 문자열 압축을 오른쪽 부분 문자열 압축한걸로 바꿔줌
                     
-                    if(duplicateCount > 1) {
-                        sb.insert(sb.length()-i, duplicateCount);
+                    // 문자열 반복해서 나타난 수가 2개 이상인 경우(즉, 문자열 압축했을 때 반복해서 나타난 문자개수가 2개 이상인 경우)
+                    if(duplicateCount >= 2) {
+                        sb.insert(sb.length()-i, duplicateCount);   // StringBuilder를 이용해서 문자열 압축했을 떄 반복하는 문자 앞에 반복해서 나타난 수 집어넣어줌
                     }
                     
-                    sb.append(compressStr2);
-                    duplicateCount = 1;
+                    sb.append(compressStr2);    // 그다음 오른쪽 부분 문자열 압축 StringBuilder에 넣어줌
+                    duplicateCount = 1; // 문자열 압축했을 때 반복해서 나타난 문자개수 1로 초기화
                 }
+                // 왼쪽부분과 오른쪽 부분 문자열 압축한게 서로 같은 경우 (즉, 문자 반복해서 나타남)
                 else {
-                    duplicateCount++;
+                    duplicateCount++;   // 문자열 압축했을 때 반복해서 나타난 문자개수 증가
                 }
                 
-                rightIdx += i;
+                rightIdx += i;  // 오른쪽 부분 인덱스 증가
             }
             
-            if(duplicateCount > 1) {
-                sb.insert(sb.length() - i, duplicateCount);
+            // 마지막으로 다시 한번 비교해주기
+            // 문자열 압축했을 때 반복해서 나타난 문자개수가 2개 이상인 경우
+            if(duplicateCount >= 2) {
+                sb.insert(sb.length() - i, duplicateCount); // StringBuilder를 이용해서 문자열 압축했을 떄 반복하는 문자 앞에 반복해서 나타난 수 집어넣어줌
             }
-            sb.append(s.substring(rightIdx));
+            sb.append(s.substring(rightIdx)); 
             
+            // 문자열 압축했을 때 최소 길이 갱신
             compressMinLength = Math.min(compressMinLength, sb.length());
             // System.out.println(sb);
         }
