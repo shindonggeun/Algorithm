@@ -13,7 +13,7 @@ public class Main {
 		N = Integer.parseInt(br.readLine());	// SCV의 수
 		scvArr = new int[3];	// scv 최대 3마리
 		visited = new boolean[61][61][61];	// scv 3마리의 체력(60이하)을 방문(체크)할 배열
-		minAttackCount = Integer.MAX_VALUE; 
+		minAttackCount = Integer.MAX_VALUE; // 뮤탈이 모든 scv들을 파괴하기 위한 최소 공격 횟수 일단 최대값으로 설정
 		
 		StringTokenizer st = new StringTokenizer(br.readLine());
 		for(int i=0; i<N; i++) {
@@ -43,8 +43,9 @@ public class Main {
 		}
 		
 		Integer[] tempScvArr = {scv1, scv2, scv3};
-		Arrays.sort(tempScvArr, Collections.reverseOrder());	// scv체력들 오름차순 정렬
+		Arrays.sort(tempScvArr, Collections.reverseOrder());	// scv체력들 내림차순 정렬
 		
+		// 임시 scv들의 체력들 받아옴 (내림차순 순으로)
 		int tempScv1 = tempScvArr[0];
 		int tempScv2 = tempScvArr[1];
 		int tempScv3 = tempScvArr[2];
