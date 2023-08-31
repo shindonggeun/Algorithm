@@ -20,9 +20,9 @@ class Solution {
         // 큐의 원소 합이 서로 같아질때 까지 반복
         // 큐1, 큐2중 큰쪽에서 작은쪽으로 숫자를 보낸다
         while(queueSum1 != queueSum2) {
-            // 작업횟수가 큐의 길이의 3배한것을 넘어버리는 경우
+            // 작업횟수가 큐의 길이의 4배한것을 넘어버리는 경우
             // 즉, 각 큐의 원소 합을 같게 만들 수 없는 경우
-            if(answer >= queue1.length * 3) {
+            if(answer > queue1.length * 4) {
                 return -1;  // -1 반환
             }
             
