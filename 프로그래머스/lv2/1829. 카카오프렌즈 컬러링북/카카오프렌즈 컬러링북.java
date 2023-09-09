@@ -2,6 +2,7 @@ import java.util.*;
 
 class Solution {
     
+    // 좌표 정보를 저장해주는 내부 클래스
     static class Position {
         int x;  
         int y;
