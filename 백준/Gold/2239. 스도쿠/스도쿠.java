@@ -19,7 +19,6 @@ public class Main {
 		sudokuSolve();
 		
 		StringBuilder sb = new StringBuilder();
-		// 스도쿠 완성한 맵 출력하기
 		for(int i=0; i<9; i++) {
 			for(int j=0; j<9; j++) {
 				sb.append(map[i][j]);
@@ -36,15 +35,13 @@ public class Main {
 			for(int j=0; j<9; j++) {
 				// 게임맵에서 아직 숫자 채우지 못한 경우
 				if(map[i][j] == 0) {
-					// 숫자 1부터 9까지 탐색해서 게임맵 빈칸에 채워넣기 과정
 					for (int num = 1; num <= 9; num++) {
-						// 게임맵에 유효한 숫자 채울 수 있는 경우
                         if (isValid(i, j, num)) {
-                            map[i][j] = num;	// 스도쿠맵에 해당 숫자 집어넣기
+                            map[i][j] = num;
                             if (sudokuSolve()) {  // 재귀 호출
-                                return true;	// true 반환해서 메서드 종료시켜줌
+                                return true;
                             }
-                            map[i][j] = 0;  // 해결할 수 없으면 다시 0으로 초기화 (백트래킹)
+                            map[i][j] = 0;  // 해결할 수 없으면 다시 0으로 초기화
                         }
                     }
                     return false;
