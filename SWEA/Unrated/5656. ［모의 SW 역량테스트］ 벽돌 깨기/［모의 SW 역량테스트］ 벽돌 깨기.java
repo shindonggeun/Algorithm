@@ -17,7 +17,6 @@ public class Solution {
 	static int W;
 	static int H;
 	static int[][] map;
-	static int[] arr;	// 선택하고자 하는 대상 배열 (즉, 처음 정수값들을 저장할 배열)
 	static int[] output;	// 대상 숫자를 담아올 배열 (정수값들을 순열로 나타낼 배열)
 	static int minRemainBlock;
 	
@@ -46,12 +45,8 @@ public class Solution {
 				}
 			}
 			
-			arr = new int[W];
 			output = new int[N];
 			
-			for(int i=0; i<W; i++) {
-				arr[i] = i;
-			}
 			backTracking(0);
 			sb.append("#").append(tc).append(" ").append(minRemainBlock).append("\n");
 		}
@@ -79,7 +74,7 @@ public class Solution {
 		}
 		
 		for(int i=0; i<W; i++) {
-			output[depth] = arr[i];
+			output[depth] = i;
 			backTracking(depth + 1);
 		}
 	}
@@ -129,30 +124,41 @@ public class Solution {
 			
 		}
 		
+		// 빈 공간을 채우는 작업 수행
 		// 위의 너비우선탐색 다 실시했으면 빈공간 채워주는 작업 실시 (벽돌 밑으로 떨어뜨리는 작업)
-        // 각 열을 순회
-        for(int col=0; col<W; col++) {
-        	// 각 열의 맨 아래부터 위로 올라가며 해당 열에 있는 모든 행 탐색
-        	for(int row=H-1; row>=0; row--) {
-        		// 해당 좌표가 빈칸(0)인 경우 (즉, 벽돌이 없는 경우)
-        		if(copyMap[row][col] == 0) {
-        			// 해당 현재 행보다 한칸 위의 행부터 시작해서 맨 위까지 탐색
-        			for(int nextRow = row-1; nextRow >= 0; nextRow--) {
-        				// 빈칸(0)이 아닌 경우(즉, 벽돌을 찾은 경우)
-        				if(copyMap[nextRow][col] != 0) {
-        					// 현재 위치([row][col])의 위의 행을 복사하고 위의 행에는 0을 설정
-        					// 즉, 벽돌을 아래로 이동시킴
-        					copyMap[row][col] = copyMap[nextRow][col];	// 벽돌 채워줌 (복사)
-        					copyMap[nextRow][col] = 0;	// 벽돌 부숨
-        					break;	
-        				}
-        			}
-        		}
-        	}
-        }
+	    blockDown(copyMap);
         
 	}
 	
+	// 벽돌 밑으로 떨어뜨리는 작업을 해주는 메서드
+	public static void blockDown(int[][] copyMap) {
+		Stack<Integer> stack = new Stack<>();
+		
+		// 각 열 탐색하기
+		for(int col=0; col<W; col++) {
+			// 각 행 탐색하기
+			for(int row=0; row<H; row++) {
+				// 탐색한 좌표가 빈칸(0)이 아닌 경우 (즉, 벽돌인 경우)
+				if(copyMap[row][col] != 0) {
+					stack.push(copyMap[row][col]);	// 벽돌의 값을 스택에 저장
+				}
+			}
+			
+			// 맨 아래부터 위로 올라가며 해당 열에 있는 모든 행 탐색
+			for(int row=H-1; row>=0; row--) {
+				// 스택이 비어있는 경우 
+				if(stack.isEmpty()) {
+					copyMap[row][col] = 0;	// 빈칸으로 채워줌
+				}
+				else {
+					// 빈칸 채우는 작업
+					copyMap[row][col] = stack.pop();	// 스택의 값을 복사한 맵에 저장해줌
+				}
+			}
+		}
+	}
+	
+	// 벽돌의 개수를 세주는 메서드 
 	public static int countBlock(int[][] copyMap) {
 		int blockCount = 0;
 		
