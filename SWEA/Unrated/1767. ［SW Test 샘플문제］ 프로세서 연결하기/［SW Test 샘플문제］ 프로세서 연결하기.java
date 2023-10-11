@@ -61,15 +61,22 @@ public class Solution {
 	
 	// 깊이우선탐색 메서드
 	public static void dfs(int depth, int coreCount, int lineLength) {
+		// 추가된 가지치기
+		// 코어 리스트의 사이즈 - 현재 진행한 선택 수 (깊이) + 현재 연결한 코어 개수가 최대 코어 개수보다 작은 경우
+		// 더이상 진행할 필요 없음 (종료조건)
+		if(coreList.size() - depth + coreCount < maxCoreCount) {
+			return;	// 메서드 종료
+		}
+		
 		// 해당 깊이가 코어들이 저장된 리스트 사이즈만큼 된 경우 (종료 조건)
 		if(depth == coreList.size()) {
-			// 최대 코어 개수보다 현재 코어 개수가 큰 경우
+			// 최대 코어 개수보다 현재 연결한 코어 개수가 큰 경우
 			// 최대한 많은 코어를 전원에 연결했을 때 전선 길이의 합 최소가 되는 값 구하는 것이므로
 			if(maxCoreCount < coreCount) {
 				maxCoreCount = coreCount;	// 최대 코어 개수 갱신
 				minLineLength = lineLength;	// 최소 전선 길이의 합 갱신 
 			}
-			// 최대 코어 개수와 코어 개수가 같은 경우
+			// 최대 코어 개수와 현재 연결한 코어 개수가 같은 경우
 			else if(maxCoreCount == coreCount) {
 				// 최소 전선 길이의 합이 현재 전선 길이의 합보다 큰 경우
 				if(minLineLength > lineLength) {
