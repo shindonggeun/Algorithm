@@ -3,6 +3,7 @@ import java.io.*;
 
 public class Main {
 	
+	// 좌표 정보를 담은 내부 클래스
 	static class Position {
 		int x;
 		int y;
@@ -17,9 +18,9 @@ public class Main {
 	
 	// 프림 알고리즘에 사용할 내부 클래스
 	static class Edge {
-		int fromVertex;
-		int toVertex;
-		int weight;
+		int fromVertex;	// 다리를 연결한 것의 시작 섬
+		int toVertex;	// 다리를 연결한 것의 도착 섬
+		int weight;	// 다리의 길이 (가중치)
 		
 		public Edge(int fromVertex, int toVertex, int weight) {
 			this.fromVertex = fromVertex;
@@ -28,14 +29,14 @@ public class Main {
 		}
 	}
 	
-	static int N;
-	static int M;
-	static int[][] map;
+	static int N;	// 지도의 행 수
+	static int M;	// 지도의 열 수
+	static int[][] map;	
 	static boolean[][] visited;
 	// 4가지 방향 배열 (상, 하, 좌, 우) => 배열에서는 하, 상, 좌, 우
 	static int[] dx = {1, -1, 0, 0};	// x축이 고정되어 있을 때 y좌표가 움직이는 방향 배열
 	static int[] dy = {0, 0, -1, 1};	// y축이 고정되어 있을 때 x좌표가 움직이는 방향 배열
-	static List<Edge> edgeList;
+	static List<Edge> edgeList;	// 섬 사이의 다리 정보를 저장하는 리스트
 	
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -53,13 +54,13 @@ public class Main {
 			}
 		}
 		
-		int islandNum = 1;
+		int islandNum = 1;	// 섬 번호를 나타내는 변수
 		for(int i=0; i<N; i++) {
 			for(int j=0; j<M; j++) {
 				// 해당 좌표가 육지(1)면서 동시에 방문하지 않은 좌표인 경우
 				if(map[i][j] == 1 && !visited[i][j]) {
-					labelIsland(i, j, islandNum);
-					islandNum++;
+					labelIsland(i, j, islandNum);	// 섬의 번호를 매기는 메서드 호출
+					islandNum++;	// 섬 번호 증가
 				}
 			}
 		}
@@ -82,10 +83,11 @@ public class Main {
 		System.out.println(minBridgeLength);
 	}
 	
+	// 섬 번호를 매기는 ㅔㅁ서드
 	public static void labelIsland(int startX, int startY, int islandNum) {
 		Queue<Position> queue = new LinkedList<>();
 		queue.add(new Position(startX, startY, 0));
-		map[startX][startY] = islandNum;
+		map[startX][startY] = islandNum;	// 시작 좌표 섬의 번호로 표시
 		visited[startX][startY] = true;
 		
 		while(!queue.isEmpty()) {
@@ -110,7 +112,7 @@ public class Main {
 				
 				queue.add(new Position(nextX, nextY, 0));
 				visited[nextX][nextY] = true;
-				map[nextX][nextY] = islandNum;
+				map[nextX][nextY] = islandNum;	// 탐색한 좌표 섬의 번호로 표시
 			}
 		}
 	}
@@ -138,10 +140,10 @@ public class Main {
 				}
 				
 				// 탐색한 좌표가 바다(0)가 아니면서 동시에 탐색한 좌표의 섬번호가 현재 섬번호와 같지 않은 경우
-				// 즉, 다른 섬 찾은 경우임 (다리 잇기 가능)
+				// 즉, 다른 섬 찾은 경우임 (다리 연결 가능)
 				if(map[nowX][nowY] != 0 && map[nowX][nowY] != fromIsland) {
 					// 현재 다리 길이가 2초과 인 경우
-					// 다리 길이에 탐색한 섬까지 다리길이로 치기 때문에 2 이상이 아닌 2초과로 해줘야한다
+					// 다리 길이에 탐색한 섬까지의 거리가 포함되므로 2 이상이 아닌 2 보다 큰 경우만 고려해줘야 한다
 					// 그래서 엣지 리스트에 넣을 때도 다리길이 - 1해서 넣어줘야함
 					if(nowBridgeLength > 2) {
 //						System.out.println("좌표 정보 확인하기: " + nowX + " " + nowY);
@@ -159,42 +161,47 @@ public class Main {
 	public static int prim(int islandCount) {
 		// 프림 알고리즘을 사용하기 위한 우선순위 큐 (가중치 오름차순 정렬)
 		PriorityQueue<Edge> pq = new PriorityQueue<>((a, b) -> a.weight - b.weight);
-		boolean[] islandVisited = new boolean[islandCount+1];
-		islandVisited[1] = true;
+		boolean[] islandVisited = new boolean[islandCount+1];	// 섬(노드)의 방문 여부를 나타내는 배열 (섬의 번호 1번부터 시작)
+		islandVisited[1] = true;	// 1번 섬 방문 처리
 		
+		// 출발 섬(1번 섬)에서 나가는 다리 정보를 큐에 추가
 		for(Edge edge: edgeList) {
 			if(edge.fromVertex == 1) {
 				pq.add(edge);
 			}
 		}
 		
-		int bridgeTotalLength = 0;
-		int connectedIsland = 1;
+		int bridgeTotalLength = 0;	// 다리의 총 길이
+		int connectedIsland = 1;	// 연결된 섬의 수
 		
+		// 프림 알고리즘 수행하는 과정
 		while(!pq.isEmpty()) {
-			Edge edge = pq.poll();
-			int from = edge.fromVertex;
-			int to = edge.toVertex;
-			int weight = edge.weight;
+			Edge edge = pq.poll();	// 엣지 정보 우선순위큐에서 뽑아내기 (가장 다리 길이가 짧은 것 뽑아냄)
+			int to = edge.toVertex;	// 다리를 연결한 것의 도착 섬
+			int weight = edge.weight;	// 다리의 길이 (가중치)
 			
+			// 아직 방문하지 않은 섬(도착섬)인 경우
 			if(!islandVisited[to]) {
-				islandVisited[to] = true;
-				bridgeTotalLength += weight;
-				connectedIsland++;
+				islandVisited[to] = true;	// 해당 섬 방문 처리
+				bridgeTotalLength += weight;	// 다리 총 길이 누적
+				connectedIsland++;	// 연결된 섬의 수 증가
 				
+				// 현재 연결된 섬에서 나가는 다리 정보를 큐에 추가해주는 과정
 				for(Edge nextEdge: edgeList) {
+					// 현재 다리의 도착섬이 방문하지 않았으면서 동시에 현재 섬(to, 즉 현재 도착섬)이 다리의 출발섬인 경우
 					if(!islandVisited[nextEdge.toVertex] && nextEdge.fromVertex == to) {
-						pq.add(nextEdge);
+						pq.add(nextEdge);	// 해당 다리를 선택할 수 있게끔 우선순위 큐에 넣어줌
 					}
 				}
 			}
 		}
-		
+		// 연결된 섬의 수가 섬의 개수와 같아지는 경우
 		if(connectedIsland == islandCount) {
-			return bridgeTotalLength;
+			return bridgeTotalLength;	// 섬의 연결된 다리의 총 길이 반환해줌
 		}
+		// 연결된 섬의 수가 섬의 개수와 같지 않은 경우 (즉, 모든 섬을 연결할 수 없는 경우)
 		else {
-			return -1;
+			return -1;	// -1 반환
 		}
 	}
 
