@@ -2,77 +2,98 @@ import java.util.*;
 import java.io.*;
 
 public class Main {
-	static int N;
-	static int M;
-	static int[] arr;
-	static int[] output;
-	static HashSet<Integer> set = new HashSet<>();
+
+	static int N;	// 농장에 있는 소들의 수
+	static int M;	// 선별한 소의 수
+	static int[] cowWeight;	// 소들의 몸무게를 담은 배열
+	static int[] selectedCow;	// 선택한 소들을 담을 배열 (조합 결과)
+	static Set<Integer> sumWeightSet = new HashSet<>();	// 조합으로 만들어진 소들의 몸무게 합들을 저장할 집합
 	
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
-		
 		N = Integer.parseInt(st.nextToken());
 		M = Integer.parseInt(st.nextToken());
 		
-		arr = new int[N];
-		output = new int[N];
+		cowWeight = new int[N];	
+		selectedCow = new int[M];
+		
 		st = new StringTokenizer(br.readLine());
-		
 		for(int i=0; i<N; i++) {
-			arr[i] = Integer.parseInt(st.nextToken());
-		}
-		dfs(0, 0);
-		ArrayList<Integer> list = new ArrayList<>(set);
-		
-		if(list.size() == 0) {
-			System.out.println(-1);
-			return;
+			cowWeight[i] = Integer.parseInt(st.nextToken());
 		}
 		
-		Collections.sort(list);
+		combination(0, 0);	// 조합 메서드 호출
+		
+		// 소들의 몸무게 합으로 만들 수 있는 소수가 아예 없는 경우 -1 출력한뒤 종료
+		if(sumWeightSet.size() == 0) {
+			System.out.println(-1);	
+			return;	// 메서드 종료
+		}
+		
+		List<Integer> resultList = new ArrayList<>(sumWeightSet);
+		Collections.sort(resultList);	// 소들의 몸무게의 합을 저장한 리스트 오름차순 정렬
 		StringBuilder sb = new StringBuilder();
 		
-		for(int i: list) {
-			sb.append(i).append(" ");
+		for(int result: resultList) {
+			sb.append(result).append(" ");
 		}
 		System.out.println(sb);
 		
 	}
-	// 조합 메서드
-	public static void dfs(int depth, int idx) {
+	
+	// 소들의 몸무게 조합을 만들어내는 메서드 (백트래킹)
+	public static void combination(int depth, int idx) {
+		// 해당 깊이(선택 횟수)가 M이 된 경우 (종료 조건)
+		// 즉, 조합 완성된 경우
 		if(depth == M) {
-			int sum = 0;
+			int sumWeight = 0;	// 해당 조합의 소들의 무게를 합한 변수
+			// 해당 조합의 소들의 무게 합하는 과정
 			for(int i=0; i<M; i++) {
-				sum+=output[i];
+				sumWeight += selectedCow[i];
 			}
-			if(isPrime(sum)) {
-				set.add(sum);
+			boolean primeFind = isPrime(sumWeight);	// 소들의 몸무게 합 소수인지 판별
+			// 소수인 경우
+			if(primeFind) {
+				// 소들의 몸무게의 합들을 저장한 집합(set)에 해당 몸무게 합 추가 (중복 제거하기 위해 사용)
+				sumWeightSet.add(sumWeight);	
 			}
-			return;
+			return;	// 메서드 종료
 		}
 		
+		// 조합 만드는 과정
 		for(int i=idx; i<N; i++) {
-			output[depth] = arr[i];
-			dfs(depth+1, i+1);
+			selectedCow[depth] = cowWeight[i];
+			combination(depth+1, i+1);
 		}
 	}
-	// 소수인지 판별해주는 메서드
+	
+	// 소수인지 판별해주는 메서드 (에라토스테네스의 체 이용)
 	public static boolean isPrime(int num) {
-		boolean find = true;
+		// 해당 숫자가 1인 경우 소수 아님
 		if(num == 1) {
-			find = false;
-			return find;
+			return false;
 		}
 		
-		for(int i=2; i<=num/2; i++) {
-			// 나눠지면 소수아님
-			if(num % i == 0) {
-				find = false;
-				break;
+		// 해당 숫자가 2 또는 3인 경우 소수임
+		if(num == 2 || num == 3) {
+			return true;
+		}
+		
+		// 해당 숫자가 2 또는 3으로 나누어지는 경우 소수가 아님
+		if(num % 2 == 0 || num % 3 == 0) {
+			return false;	
+		}
+		
+		// 에라토스테네스의 체에서 최적화 된 부분 (외우자)
+		for(int i=5; i*i <= num; i+=6) {
+			if(num % i == 0 || num % (i + 2) == 0) {
+				return false;	// 소수 아님
 			}
 		}
-		return find;
+		
+		// 위의 과정을 거쳐서 이상 없는것들은 소수임
+		return true;
 	}
 
 }
