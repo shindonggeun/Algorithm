@@ -2,87 +2,96 @@ import java.util.*;
 import java.io.*;
 
 public class Main {
-	
-	static class Node {
-		int vertex;
-		int weight;
-		Node next;
+
+	// 해당 정점에 연결된 간선 정보를 저장하는 내부 클래스
+	static class Edge {
+		int toVertex;	// 도착지 정점
+		int weight;	// 가중치
 		
-		public Node(int vertex, int weight, Node next) {
-			this.vertex = vertex;
+		public Edge(int toVertex, int weight) {
+			this.toVertex = toVertex;
 			this.weight = weight;
-			this.next = next;
 		}
 	}
-
+	
+	static int V;	// 정점의 개수
+	static int E;	// 간선의 개수
+	static int K;	// 시작 정점 번호
+	static ArrayList<ArrayList<Edge>> graph = new ArrayList<>();	// 각 정점에 연결된 정정 및 간선정보를 저장할 리스트 (그래프)
+	static int[] dist;	// 각 정점들의 최단경로를 저장할 배열
+	static final int INF = Integer.MAX_VALUE;	// 다익스트라 알고리즘에서 최소 비용 초기화시 초기에 사용할 무한대 값
+	static boolean[] visited;	// 각 정점 방문여부를 체크할 방문배열
+	
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
+		V = Integer.parseInt(st.nextToken());
+		E = Integer.parseInt(st.nextToken());
+		K = Integer.parseInt(br.readLine());
 		
-		int V = Integer.parseInt(st.nextToken());	// 정점의 개수
-		int E = Integer.parseInt(st.nextToken());	// 간선의 개수
-		int k = Integer.parseInt(br.readLine()) - 1;	// 시작 정점 번호
+		dist = new int[V+1];	// [1] ~ [V]까지의 각 정점들의 최단 경로값
+		visited = new boolean[V+1];
+		// 그래프간 정점들 생성
+		for(int i=0; i<=V; i++) {
+			graph.add(new ArrayList<>());
+			dist[i] = INF;
+		}
 		
-		// 다익스트라 알고리즘을 이용하기 위해 인접리스트 이용하기
-		Node[] adjList = new Node[V];	// 노드를 이용한 인접리스트
-		int[] distance = new int[V];	// 시작점에서 자신으로 오는 최단 거리
-		boolean[] visited = new boolean[V];	// 각 정점들 방문 여부 처리할 배열
-		
-		// 간선의 개수만큼 연결해주기
+		// 간선 연결 작업 과정
 		for(int i=0; i<E; i++) {
 			st = new StringTokenizer(br.readLine());
-			int fromVertex = Integer.parseInt(st.nextToken()) - 1;
-			int toVertex = Integer.parseInt(st.nextToken()) - 1;
-			int weight = Integer.parseInt(st.nextToken());
+			int fromVertex = Integer.parseInt(st.nextToken());	// 시작지
+			int toVertex = Integer.parseInt(st.nextToken());	// 도착지
+			int weight = Integer.parseInt(st.nextToken());	// 가중치
 			
-			adjList[fromVertex] = new Node(toVertex, weight, adjList[fromVertex]);
+			// 단방향 간선 연결 (출발지 -> 도착지)
+			graph.get(fromVertex).add(new Edge(toVertex, weight));
 		}
 		
-		final int INF = Integer.MAX_VALUE;
-		Arrays.fill(distance, INF);
-		
-		distance[k] = 0;	// 시작지점의 최단거리 0으로
-		int min = 0;
-		int stopOver = 0;	// 경유지
-		
-		for(int i=0; i<V; i++) {	// 모든 정점을 다 처리할 때 까지 반복
-			// step1: 미방문 정점 중 출발지에서 가장 가까운 정점을 경유지로 선택
-			stopOver = -1;
-			min = INF;	// 최단거리 INF로 설정
-			for(int j=0; j<V; j++) {
-				if(!visited[j] && min > distance[j]) {
-					min = distance[j];
-					stopOver = j;
-				}
-			}
-			
-			// 경유지가 -1인 경우
-			if(stopOver == -1) {
-				break;
-			}
-			
-			// step2: 방문처리
-			visited[stopOver] = true;
-			
-			// step3: 경유지를 이용하여 미방문 정점들의 출발지에서 자신으로의 최소비용 고려
-			for(Node temp = adjList[stopOver]; temp != null; temp = temp.next) {
-				if(!visited[temp.vertex] &&
-						distance[temp.vertex] > min + temp.weight) {
-					distance[temp.vertex] = min + temp.weight;
-				}
-			}
-		}
-		
+		dijkstra(K);	// 다익스트라 메서드 호출
 		StringBuilder sb = new StringBuilder();
-		for(int i=0; i<V; i++) {
-			if(distance[i] == INF) {
+		for(int i=1; i<=V; i++) {
+			if(dist[i] == INF) {
 				sb.append("INF").append("\n");
+				continue;
 			}
-			else {
-				sb.append(distance[i]).append("\n");
-			}
+			sb.append(dist[i]).append("\n");
 		}
 		System.out.print(sb);
+		
 	}
+	
+	// 시작점에서 다른 모든 정점으로의 최단 경로를 구해줄 다익스트라 알고리즘 메서드
+	public static void dijkstra(int start) {
+		// 다익스트라 알고리즘에서 사용할 우선순위 큐 선언 및 초기화
+		// 가중치 오름차순 정렬
+		PriorityQueue<Edge> pq = new PriorityQueue<>((a, b) -> a.weight - b.weight);
+		dist[start] = 0;	// 시작점 최소비용 0으로 초기화
+		pq.add(new Edge(start, 0));	// 우선순위 큐에 시작점 정보 저장
+		
+		while(!pq.isEmpty()) {
+			Edge now = pq.poll();	
+			int to = now.toVertex;
+			int weight = now.weight;
+			
+			// 해당 정점이 방문 안된 경우
+			if(!visited[to]) {
+				visited[to] = true;	// 해당 정점 방문 처리
+				
+				// 해당 정점에 연결된 간선 정보 뽑아내는 과정
+				for(Edge next: graph.get(to)) {
+					int cost = weight + next.weight;	// 다음 위치까지의 비용 계산하기
+					// 계산한 현재 비용이 다음 위치(다음 정점)의 최소 비용보다 작은 경우
+					if(cost < dist[next.toVertex]) {
+						dist[next.toVertex] = cost;	// 다음 정점의 최소 비용 갱신해주기 
+						pq.add(new Edge(next.toVertex, dist[next.toVertex]));	// 우선순위 큐에 다음 정점 정보 저장
+					}
+				}
+			}
+			
+			
+		}
+	}
+	
 
 }
