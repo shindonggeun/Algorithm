@@ -76,16 +76,18 @@ public class Main {
 		int aRoot = find(a);
 		int bRoot = find(b);
 		
-		
+		// aRoot의 크기와 bRoot의 크기가 같은 경우
 		if(aRoot == bRoot) {
-			// 사이클을 발견하면 해당 루트를 0으로 설정
-			parents[aRoot] = 0;
+			parents[aRoot] = 0;	// 사이클을 발견하면 해당 루트를 0으로 설정
 		}
+		// 가지치기 부분 (최적화) -> 이 조건들을 해줘야 stack overflow 방지
+		// aRoot의 크기가 bRoot의 크기보다 작은 경우
 		else if(aRoot < bRoot){
-			parents[bRoot] = aRoot;
+			parents[bRoot] = aRoot;	// bRoot의 부모는 aRoot가 된다
 		}
+		// aRoot의 크기가 bRoot의 크기보다 큰 경우
 		else {
-			parents[aRoot] = bRoot;
+			parents[aRoot] = bRoot;	// aRoot의 부모는 bRoot가 된다
 		}
 		
 	}
