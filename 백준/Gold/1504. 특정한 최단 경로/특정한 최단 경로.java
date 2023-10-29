@@ -18,7 +18,7 @@ public class Main {
 	static ArrayList<ArrayList<Edge>> graph = new ArrayList<>();
 	static int[] dist;
 	static boolean[] visited;
-	static final int INF = 200000000;
+	static final int INF = 200000000;	// 200,000 * 1,000
 	static int vertex1;
 	static int vertex2;
 	
@@ -49,13 +49,15 @@ public class Main {
 		vertex1 = Integer.parseInt(st.nextToken());
 		vertex2 = Integer.parseInt(st.nextToken());
 		
-		int resultDistance1 = calculateMinDistance(1, vertex1) + 
-				calculateMinDistance(vertex1, vertex2) +
-				calculateMinDistance(vertex2, N);
+		int resultDistance1 = 0;
+		resultDistance1 += calculateMinDistance(1, vertex1);
+		resultDistance1 += calculateMinDistance(vertex1, vertex2);
+		resultDistance1 += calculateMinDistance(vertex2, N);
 		
-		int resultDistance2 = calculateMinDistance(1, vertex2) +
-				calculateMinDistance(vertex2, vertex1) +
-				calculateMinDistance(vertex1, N);
+		int resultDistance2 = 0;
+		resultDistance2 += calculateMinDistance(1, vertex2);
+		resultDistance2 += calculateMinDistance(vertex2, vertex1);
+		resultDistance2 += calculateMinDistance(vertex1, N);
 		
 		int resultMinDistance = Math.min(resultDistance1, resultDistance2);
 		
