@@ -12,13 +12,15 @@ public class Main {
 			this.weight = weight;
 		}
 	}
-
+	
 	static int N;
 	static int E;
 	static ArrayList<ArrayList<Edge>> graph = new ArrayList<>();
 	static int[] dist;
-	static final int INF = 200000000;	// 200,000 * 1,000
 	static boolean[] visited;
+	static final int INF = 200000000;	// 200,000 * 1,000
+	static int vertex1;
+	static int vertex2;
 	
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -29,7 +31,6 @@ public class Main {
 		
 		dist = new int[N+1];
 		visited = new boolean[N+1];
-		
 		for(int i=0; i<=N; i++) {
 			graph.add(new ArrayList<>());
 		}
@@ -39,25 +40,33 @@ public class Main {
 			int fromVertex = Integer.parseInt(st.nextToken());
 			int toVertex = Integer.parseInt(st.nextToken());
 			int weight = Integer.parseInt(st.nextToken());
-		
+			
 			graph.get(fromVertex).add(new Edge(toVertex, weight));
 			graph.get(toVertex).add(new Edge(fromVertex, weight));
 		}
 		
 		st = new StringTokenizer(br.readLine());
-		int vertex1 = Integer.parseInt(st.nextToken());
-		int vertex2 = Integer.parseInt(st.nextToken());
+		vertex1 = Integer.parseInt(st.nextToken());
+		vertex2 = Integer.parseInt(st.nextToken());
 		
-		int resultDistance1 = calculateMinDistance(1, vertex1);
+		int resultDistance1 = 0;
+		resultDistance1 += calculateMinDistance(1, vertex1);
 		resultDistance1 += calculateMinDistance(vertex1, vertex2);
 		resultDistance1 += calculateMinDistance(vertex2, N);
 		
-		int resultDistance2 = calculateMinDistance(1, vertex2);
+		int resultDistance2 = 0;
+		resultDistance2 += calculateMinDistance(1, vertex2);
 		resultDistance2 += calculateMinDistance(vertex2, vertex1);
 		resultDistance2 += calculateMinDistance(vertex1, N);
 		
 		int resultMinDistance = Math.min(resultDistance1, resultDistance2);
-		System.out.println(resultMinDistance >= INF ? -1 : resultMinDistance);
+		
+		if(resultMinDistance >= INF) {
+			System.out.println(-1);
+		}
+		else {
+			System.out.println(resultMinDistance);
+		}
 	}
 	
 	public static void dijkstra(int start) {
@@ -69,10 +78,8 @@ public class Main {
 			Edge now = pq.poll();
 			int to = now.toVertex;
 			int weight = now.weight;
-			
 			if(!visited[to]) {
 				visited[to] = true;
-				
 				for(Edge next: graph.get(to)) {
 					int cost = weight + next.weight;
 					if(cost < dist[next.toVertex]) {
@@ -81,6 +88,7 @@ public class Main {
 					}
 				}
 			}
+			
 		}
 	}
 	
@@ -89,6 +97,7 @@ public class Main {
 		Arrays.fill(visited, false);
 		dijkstra(start);
 		return dist[end];
+		
 	}
 
 }
