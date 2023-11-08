@@ -4,7 +4,7 @@
 
 ### 성능 요약
 
-메모리: 18316 KB, 시간: 224 ms
+메모리: 14392 KB, 시간: 132 ms
 
 ### 분류
 
@@ -12,7 +12,7 @@
 
 ### 제출 일자
 
-2023년 10월 11일 14:03:08
+2023년 11월 8일 09:37:29
 
 ### 문제 설명
 
@@ -54,9 +54,9 @@
 <table class="table table-bordered" style="width: 100%;">
 	<tbody>
 		<tr>
-			<td style="width: 33%; text-align: center;"><img alt="" src="" style="width: 220px; height: 194px;"></td>
-			<td style="width: 34%; text-align: center;"><img alt="" src="" style="width: 220px; height: 195px;"></td>
-			<td style="width: 33%; text-align: center;"><img alt="" src="" style="width: 220px; height: 196px;"></td>
+			<td style="width: 33%; text-align: center;"><img alt="" src="https://upload.acmicpc.net/c7c663a1-4ebb-4c89-9a6a-4157513c1a30/-/preview/" style="width: 220px; height: 194px;"></td>
+			<td style="width: 34%; text-align: center;"><img alt="" src="https://upload.acmicpc.net/390361f9-0647-4ff8-9709-7c1de26c0929/-/preview/" style="width: 220px; height: 195px;"></td>
+			<td style="width: 33%; text-align: center;"><img alt="" src="https://upload.acmicpc.net/2a1d4415-0a0d-4508-8a14-1956fdf650ec/-/preview/" style="width: 220px; height: 196px;"></td>
 		</tr>
 		<tr>
 			<td style="width: 33%; text-align: center;">C의 방향이 중간에 바뀌었다</td>
@@ -71,8 +71,8 @@
 <table class="table table-bordered" style="width: 100%;">
 	<tbody>
 		<tr>
-			<td style="width: 50%; text-align: center;"><img alt="" src="" style="width: 220px; height: 195px;"></td>
-			<td style="width: 50%; text-align: center;"><img alt="" src="" style="width: 220px; height: 195px;"></td>
+			<td style="width: 50%; text-align: center;"><img alt="" src="https://upload.acmicpc.net/b6f340e2-8248-4385-9a6a-546e7a2648e4/-/preview/" style="width: 220px; height: 195px;"></td>
+			<td style="width: 50%; text-align: center;"><img alt="" src="https://upload.acmicpc.net/dd98ec33-6796-455d-a612-8db31a9806f0/-/preview/" style="width: 220px; height: 195px;"></td>
 		</tr>
 		<tr>
 			<td style="width: 50%; text-align: center;vertical-align: middle;">
