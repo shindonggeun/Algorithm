@@ -3,8 +3,10 @@ import java.io.*;
 
 public class Main {
 	
+	// 좌표정보를 담은 내부 클래스
 	static class Position {
-		int x, y;
+		int x;
+		int y;
 		
 		public Position(int x, int y) {
 			this.x = x;
@@ -12,94 +14,96 @@ public class Main {
 		}
 	}
 	
-	static int N;
-	static char[][] map;
-	static boolean[][] visited;
-	// 4가지 방향을 나타내는 방향배열 (상, 하, 좌, 우)
-	static int[] dx = {1, -1, 0, 0};	// x축이 고정되어 있을 때 y좌표가 움직이는 방향 배열 (상, 하)
-	static int[] dy = {0, 0, -1, 1};	// y축이 고정되어 있을 때 x좌표가 움직이는 방향 배열 (좌, 우)
+	static int N;	// 맵의 크기
+	static char[][] colorMap;	// 각 칸의 컬러비트를 담은 맵
+	static boolean[][] visited;	// 각 좌표 방문여부 배열
+	// 4가지 방향 배열 (하, 상, 좌, 우)
+	static int[] dx = {-1, 1, 0, 0};
+	static int[] dy = {0, 0, -1, 1};
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		
-		N = Integer.parseInt(st.nextToken());
-		map = new char[N][N];	// (0, 0) ~ (N-1, N-1)
+		N = Integer.parseInt(br.readLine());
+		colorMap = new char[N][N];	// [0][0] ~ [N-1][N-1]
 		visited = new boolean[N][N];
 		
 		for(int i=0; i<N; i++) {
 			String input = br.readLine();
 			for(int j=0; j<N; j++) {
-				map[i][j] = input.charAt(j);
+				colorMap[i][j] = input.charAt(j);
 			}
 		}
 		
-		int normalColorCount = 0;
-		// 적록색약이 아닌경우 실시하는 과정
+		int normalAreaCount = 0;	// 적록색약이 아닌 정상인 사람이 봤을 때의 구역의 개수
+		
+		// 적록색약이 아닌 정상인 사람이 그리드를 봤을 때의 구역의 개수 찾는 과정
 		for(int i=0; i<N; i++) {
 			for(int j=0; j<N; j++) {
+				// 해당 좌표가 방문처리 안된 경우
 				if(!visited[i][j]) {
-					bfs(i, j);
-					normalColorCount++;
+					colorBfs(i, j, colorMap[i][j]);	// 해당 구역의 색상 찾는 너비우선탐색 메서드 호출
+					normalAreaCount++;	// 정상인 사람이 봤을 때의 구역의 개수 증가
 				}
 			}
 		}
 		
-		// 적록색약인 경우 너비우선탐색 실시하는 과정
+		// 적록색약이 구별할 수 없게끔 초록 색상을 빨강색상으로 만드는 과정
 		for(int i=0; i<N; i++) {
 			for(int j=0; j<N; j++) {
-				// 적록색약은 빨간색과 초록색의 차이를 거의 느끼지 못하므로
-				// 해당 좌표가 초록색인 경우
-				if(map[i][j] == 'G') {
-					map[i][j] = 'R';	// 빨간색으로 바꿔줌
+				if(colorMap[i][j] == 'G') {
+					colorMap[i][j] = 'R';
 				}
 			}
 		}
 		
-		
-		int abnormalColorCount = 0;
-		visited = new boolean[N][N];
-		// 적록색약인 경우 너비우선탐색 실시하는 과정
+		visited = new boolean[N][N];	// 다시 방문배열 초기화
+		int abnormalAreaCount = 0;	// 적록색약인 사람이 봤을 때의 구역의 개수
 		for(int i=0; i<N; i++) {
 			for(int j=0; j<N; j++) {
+				// 해당 좌표가 방문처리 안된 경우
 				if(!visited[i][j]) {
-					bfs(i, j);
-					abnormalColorCount++;
+					colorBfs(i, j, colorMap[i][j]);	// 해당 구역의 색상 찾는 너비우선탐색 메서드 호출
+					abnormalAreaCount++;	// 적록색약인 사람이 봤을 때의 구역의 개수 증가
 				}
 			}
 		}
 		
-		System.out.println(normalColorCount + " " + abnormalColorCount);
+		System.out.println(normalAreaCount + " " + abnormalAreaCount);
+		
 	}
 	
-	public static void bfs(int startX, int startY) {
+	// 해당 구역의 색상 찾는 메서드 (너비우선탐색 알고리즘 이용)
+	public static void colorBfs(int startX, int startY, char colorBit) {
+		// 너비우선탐색을 이용하기 위해 큐 선언 및 생성
 		Queue<Position> queue = new LinkedList<>();
-		queue.add(new Position(startX, startY));
-		visited[startX][startY] = true;
-		char tempColor = map[startX][startY];
+		queue.add(new Position(startX, startY));	// 해당 시작좌표의 정보 큐에 저장
+		visited[startX][startY] = true;	// 해당 시작 좌표 방문처리
 		
+		// 너비우선탐색 알고리즘 이용
 		while(!queue.isEmpty()) {
+			// 현재 좌표 정보 뽑아냄
 			Position now = queue.poll();
 			int nowX = now.x;
 			int nowY = now.y;
 			
-			// 4가지 방향 탐색 (상, 하, 좌, 우)
+			// 4가지 방향 탐색 (하 ,상, 좌, 우)
 			for(int i=0; i<4; i++) {
 				int nextX = nowX + dx[i];
 				int nextY = nowY + dy[i];
 				
-				// (0, 0) ~ (N-1, N-1) 이외의 좌표를 탐색한 경우
+				// 탐색한 좌표가 [0][0] ~ [N-1][N-1] 이외의 좌표인 경우
 				if(nextX < 0 || nextY < 0 || nextX >= N || nextY >= N) {
-					continue;
+					continue;	// 넘어감
 				}
 				
-				// 이미 방문한 좌표거나 탐색한 좌표가 인접한 컬러의 색상과 다른 경우
-				if(visited[nextX][nextY] || map[nextX][nextY] != tempColor) {
-					continue;
+				// 탐색한 좌표가 방문처리 됐거나 또는 탐색한 좌표의 색상이 시작했던 컬러 색상 비트와 다른 경우
+				if(visited[nextX][nextY] || colorMap[nextX][nextY] != colorBit) {
+					continue;	// 넘어감
 				}
 				
+				// 위의것들의 경우가 아닌 경우 탐색한 좌표 정보 큐에 저장
 				queue.add(new Position(nextX, nextY));
-				visited[nextX][nextY] = true;
+				visited[nextX][nextY] = true;	// 탐색한 좌표 방문 처리
 			}
 		}
 	}
