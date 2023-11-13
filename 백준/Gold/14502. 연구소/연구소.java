@@ -3,24 +3,23 @@ import java.io.*;
 
 public class Main {
 	
-	// 바이러스가 있는 좌표를 저장해주는 내부 클래스
-	static class Virus {
-		int x;
-		int y;
+	static class Position {
+		int x, y;
 		
-		public Virus(int x, int y) {
+		public Position(int x, int y) {
 			this.x = x;
 			this.y = y;
 		}
 	}
-
-	static int N;	// 세로 크기 
-	static int M;	// 가로 크기 
+	
+	static int N;	// 세로 길이 (y 좌표)
+	static int M;	// 가로 길이 (x 좌표)
 	static int[][] map;
-	// 4가지 방향 배열 (상, 하, 좌, 우) => 배열에서는 하, 상, 좌, 우
-	static int[] dx = {1, -1, 0, 0};	// x축이 고정되어 있을 때 y좌표가 움직이는 방향 배열 
-	static int[] dy = {0, 0, -1, 1};	// y축이 고정되어 있을 때 x좌표가 움직이는 방향 배열 
-	static int safeArea = Integer.MIN_VALUE;	// 안전영역 크기 최대값
+	static int[][] resultMap;
+	// 4가지 방향 탐색 (상, 하, 좌, 우)
+	static int[] dx = {1, -1, 0, 0};	// x축이 고정되어 있을 때 y좌표가 움직이는 방향 배열 (상, 하)
+	static int[] dy = {0, 0, -1, 1};	// y축이 고정되어 있을 때 x좌표가 움직이는 방향 배열 (좌, 우)
+	static int maxArea = Integer.MIN_VALUE;	// 안전 영역 최대 크기
 	
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -28,7 +27,7 @@ public class Main {
 		
 		N = Integer.parseInt(st.nextToken());
 		M = Integer.parseInt(st.nextToken());
-		map = new int[N][M];	// [0][0] ~ [N-1][M-1]
+		map = new int[N][M];	// (0, 0) ~ (M-1, N-1)
 		
 		for(int i=0; i<N; i++) {
 			st = new StringTokenizer(br.readLine());
@@ -37,105 +36,99 @@ public class Main {
 			}
 		}
 		
-		
-		// 깊이우선탐색 실시
-		// 벽 세운거 0개부터 실시
+		// 벽 세우는 작업을 실시하기 위해 깊이우선탐색 이용 (백트래킹)
+		// 모든칸에 벽을 세워서 경우를 따져야 하므로
 		dfs(0);
-		
-		System.out.println(safeArea);
+	
+		System.out.println(maxArea);
 	}
 	
-	// 벽 세우는 과정을 나타내는 메서드 (깊이우선탐색)
+	// 벽을 세우는 작업을 실시하기 위한 깊이우선탐색
 	public static void dfs(int wallCount) {
-		// 벽 3개 세워지면 너비우선탐색 실시 (종료조건)
+		// 벽 3개 세워지면 너비우선탐색 실시
 		if(wallCount == 3) {
-			bfs();	// 바이러스 퍼트리기
-			return;	// 메서드 종료
+			bfs();
+			return;
 		}
 		
 		for(int i=0; i<N; i++) {
 			for(int j=0; j<M; j++) {
-				// 맵에서 해당 칸이 빈칸(0)인 경우 -> 백트래킹 
 				if(map[i][j] == 0) {
-					map[i][j] = 1;	// 벽(1)을 세웠다가
-					dfs(wallCount+1);	// 벽 개수 늘려준 뒤
-					map[i][j] = 0;	// 다시 벽 허물음(0)
+					map[i][j] = 1;	// 벽을 세웠다가
+					dfs(wallCount+1);
+					map[i][j] = 0;	// 다시 벽 허물음 (백트래킹 과정)
 				}
 			}
 		}
+		
 	}
 	
-	// 바이러스 퍼트리는 과정을 나타내는 메서드 (너비우선탐색)
+	// 바이러스 퍼트리는 작업을 실시하는 너비우선탐색
 	public static void bfs() {
-		Queue<Virus> queue = new LinkedList<>();
-		boolean[][] visited = new boolean[N][M];	// [0][0] ~ [N-1][M-1]
+		boolean[][] visited = new boolean[N][M];	// (0, 0) ~ (M-1, N-1)
+		Queue<Position> queue = new LinkedList<>();
 		
 		for(int i=0; i<N; i++) {
 			for(int j=0; j<M; j++) {
-				// 바이러스가 있는 좌표인 경우 큐에 저장
+				// 바이러스가 있는 좌표는 큐에 집어넣음(너비우선탐색을 위해)
 				if(map[i][j] == 2) {
-					queue.add(new Virus(i, j));
-					visited[i][j] = true;	// 해당 좌표 방문 처리
+					queue.add(new Position(i, j));
+					visited[i][j] = true;
 				}
 			}
 		}
 		
-		int[][] copyMap = new int[N][M];	// 맵의 원본을 복사해서 사용할 수 있도록
+		//원본 맵(연구소)를 바꾸지 않기 위한 카피본 사용 (깊은 복사)
+        int copyMap[][] = new int[N][M];
+
+        for (int i=0; i<N; i++) {
+            copyMap[i] = map[i].clone();
+        }
 		
-		// 2차원 배열 깊은복사 실시
-		for(int i=0; i<N; i++) {
-			copyMap[i] = map[i].clone();
-		}
-		
-		// 큐가 빌때까지 반복
 		while(!queue.isEmpty()) {
-			Virus now = queue.poll();
+			Position now = queue.poll();
 			int nowX = now.x;
 			int nowY = now.y;
 			
-			// 4가지 방향 탐색 (하, 상, 좌, 우)
+			// 4가지 방향 탐색
 			for(int i=0; i<4; i++) {
 				int nextX = nowX + dx[i];
 				int nextY = nowY + dy[i];
 				
-				// 탐색한 좌표가 [0][0] ~ [N-1][M-1] 이외의 좌표인 경우
+				// 탐색한 좌표가 (0, 0) ~ (M-1, N-1) 이외의 좌표인 ㄱ경우
 				if(nextX < 0 || nextY < 0 || nextX >= N || nextY >= M) {
-					continue;	// 넘어감
+					continue;
 				}
 				
-				// 탐색한 좌표가 이미 방문한 좌표거나 또는 복사한 맵에서 탐색한 해당 좌표가 벽(1)인 경우
+				// 탐색한 좌표가 이미 방문한 좌표거나 또는 벽에 가로막힌 경우
 				if(visited[nextX][nextY] || copyMap[nextX][nextY] == 1) {
-					continue;	// 넘어감
+					continue;
 				}
 				
-				// 탐색한 좌표가 빈칸(0)인 경우
+				// 탐색한 좌표가 빈칸 인 경우
 				if(copyMap[nextX][nextY] == 0) {
-					copyMap[nextX][nextY] = 2;	// 해당 좌표에 바이러스 퍼트림
-					visited[nextX][nextY] = true;	// 해당 좌표 방문 처리
-					queue.add(new Virus(nextX, nextY));	// 큐에 해당 바이러스 정보 집어넣음
+					copyMap[nextX][nextY] = 2;	// 해당 좌표 바이러스 퍼짐
+					visited[nextX][nextY] = true;
+					queue.add(new Position(nextX, nextY));
 				}
 			}
 		}
 		
-		// 너비우선탐색이 다 끝난 경우 안전영역 크기 구해주기
-		findSafeArea(copyMap);
+		// 위의 너비우선탐색 다 실시했으면 카피본(복사본 맵)에서 안전영역 크기 확인해주기
+		findSafeZone(copyMap);
 	}
-	
-	// 안전영역 크기를 구해주는 메서드
-	public static void findSafeArea(int[][] copyMap) {
-		int tempArea = 0;	// 임시 안전영역 크기
+	// 안전영역 크기 구해주는 메서드
+	public static void findSafeZone(int[][] copyMap) {
+		int safeZone = 0;
 		
-		// 완전탐색 실시
 		for(int i=0; i<N; i++) {
 			for(int j=0; j<M; j++) {
-				// 복사한 맵에서 해당 좌표가 빈칸(0)인 경우
-				if(copyMap[i][j] == 0) {
-					tempArea++;	// 임시 안전영역 크기 증가
-				}
+				 if(copyMap[i][j] == 0) {
+					 safeZone++;
+				 }
 			}
 		}
-		
-		safeArea = Math.max(safeArea, tempArea);	// 안전영역크기 최대 갱신
+		maxArea = Math.max(maxArea, safeZone);
 	}
 
 }
