@@ -14,90 +14,101 @@ public class Main {
 		}
 	}
 	
-	static List<Position> storeList;	// 편의점들의 좌표정보를 저장한 리스트
-	static boolean[] visited;	// 해당 편의점 방문 여부 체크해주는 배열
-	static boolean isPossible;	// 락 페스티벌(도착지)까지 갈 수 있는지 판단해주는 변수
+	static int N;	// 맥주를 파는 편의점의 개수
+	static Position[] storeArr;	// 편의점의 좌표정보를 저장한 배열
+	static boolean[] visited;	// 각 편의점 방문 여부를 판단해주는 방문 배열
+	static boolean isPossible;	// 페스티벌에 갈 수 있는지 여부를 판단해주는 변수
 	
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		int T = Integer.parseInt(br.readLine());
+		StringTokenizer st = null;
+		int testCase = Integer.parseInt(br.readLine());
 		StringBuilder sb = new StringBuilder();
 		
-		while(T-- > 0) {
-			int N = Integer.parseInt(br.readLine());	// 편의점의 개수 입력
-			StringTokenizer st = new StringTokenizer(br.readLine());
-			int startX = Integer.parseInt(st.nextToken());
-			int startY = Integer.parseInt(st.nextToken());
-			storeList = new ArrayList<>();	// 편의점의 좌표정보를 담은 리스트
+		for(int tc=1; tc<=testCase; tc++) {
+			N = Integer.parseInt(br.readLine());
+			// 상근이네 집 좌표 입력받는 과정
+			st = new StringTokenizer(br.readLine());
+			int homeX = Integer.parseInt(st.nextToken());
+			int homeY = Integer.parseInt(st.nextToken());
+			
+			storeArr = new Position[N];	// [0] ~ [N]
 			visited = new boolean[N];
 			isPossible = false;
 			
+			// 편의점 좌표 입력받는 과정
 			for(int i=0; i<N; i++) {
 				st = new StringTokenizer(br.readLine());
-				int x = Integer.parseInt(st.nextToken());
-				int y = Integer.parseInt(st.nextToken());
+				int storeX = Integer.parseInt(st.nextToken());
+				int storeY = Integer.parseInt(st.nextToken());
 				
-				storeList.add(new Position(x, y));
+				storeArr[i] = new Position(storeX, storeY);
 			}
 			
+			// 락 페스티벌 좌표 입력받는 과정
 			st = new StringTokenizer(br.readLine());
-			int endX = Integer.parseInt(st.nextToken());
-			int endY = Integer.parseInt(st.nextToken());
+			int festivalX = Integer.parseInt(st.nextToken());
+			int festivalY = Integer.parseInt(st.nextToken());
 			
-			bfs(startX, startY, endX, endY);
+			// 상근이네 집(시작지점)에서부터 락 페스티벌(도착지점)까지 도착할 수 있는지 여부 체크하는 메서드 호출
+			arriveCheck(homeX, homeY, festivalX, festivalY);
 			
-			String happyOrSad = isPossible ? "happy" : "sad";
-			sb.append(happyOrSad).append("\n");
+			if(isPossible) {
+				sb.append("happy").append("\n");
+			} 
+			else {
+				sb.append("sad").append("\n");
+			}
 		}
 		System.out.print(sb);
-		
 	}
 	
-	public static void bfs(int startX, int startY, int endX, int endY) {
+	// 시작지점에서 도착지(페스티벌 장소)까지 도착할 수 있는지 여부를 체크하는 메서드 (너비우선탐색 알고리즘 이용)
+	public static void arriveCheck(int startX, int startY, int endX, int endY) {
+		// 너비우선탐색 알고리즘을 이용하기 위해 큐 선언 및 생성
 		Queue<Position> queue = new LinkedList<>();
-		queue.add(new Position(startX, startY));
+		queue.add(new Position(startX, startY));	// 시작지점 좌표 정보 큐에 저장
 		
+		// 너비우선탐색 알고리즘 이용
 		while(!queue.isEmpty()) {
+			// 큐에서 현재 좌표 정보 뽑아냄
 			Position now = queue.poll();
 			int nowX = now.x;
 			int nowY = now.y;
 			
-			// 해당 좌표에서 페스티벌 좌표(도착지)까지 갈수 있는 경우 
-			if(calculateDistance(nowX, nowY, endX, endY)) {
-				isPossible = true;	// 갈수있음
-				return;	// 메서드 종료
+			// 현재 좌표에서부터 도착지(페스티벌 장소)까지 갈 수 있는 경우
+			if(calculate(nowX, nowY, endX, endY)) {
+				isPossible = true;	// 갈 수 있음
+				break;	// 메서드 종료
 			}
 			
-			// 편의점들 탐색하기
-			for(int i=0; i<storeList.size(); i++) {
-				// 해당 편의점 방문 안한 경우
+			for(int i=0; i<N; i++) {
+				// 해당 편의점이 방문되지 않은 경우
 				if(!visited[i]) {
-					int storeX = storeList.get(i).x;
-					int storeY = storeList.get(i).y;
+					// 편의점의 좌표 정보 추출
+					int storeX = storeArr[i].x;
+					int storeY = storeArr[i].y;
 					
-					// 해당 편의점까지 갈 수 있는 거리인 경우
-					if(calculateDistance(nowX, nowY, storeX, storeY)) {
-						visited[i] = true;	// 해당 편의점 방문 처리
-						queue.add(new Position(storeX, storeY));	// 편의점까지 갔으므로 편의점의 좌표 큐에 저장
+					// 현재 좌표에서부터 해당 편의점의 좌표까지 거리 계산하기
+					// 해당 지점까지 갈 수 있는 경우
+					if(calculate(nowX, nowY, storeX, storeY)) {
+						visited[i] = true;	// 해당 편의점 방문 처리 
+						queue.add(new Position(storeX, storeY));	// 해당 편의점의 좌표 정보 큐에 저장
 					}
-					// 해당 편의점까지 갈 수 없는 거리인 경우
-					else {
-						continue;	// 넘어감 (다음 편의점 좌표 탐색)
-					}
-				}	
+				}
 			}
 		}
-		
 	}
 	
-	// 해당 지점에서 도착지점까지의 거리 계산해주는 메서드
-	public static boolean calculateDistance(int nowX, int nowY, int endX, int endY) {
+	// 해당 현재 지점부터 도착 지점까지 거리를 계산하여 도착지점까지 갈 수 있는지 여부를 판단해주는 메서드
+	public static boolean calculate(int nowX, int nowY, int endX, int endY) {
+		// 현재 지점부터 도착 지점까지 맨해튼 거리를 이용해서 계산
 		int distance = Math.abs(nowX - endX) + Math.abs(nowY - endY);
-		// 거리가 1000 이하인 경우
+		// 해당 거리가 1000 이하인 경우
 		if(distance <= 1000) {
-			return true;	// 도착지점까지 갈 수 있음
+			return true;	// 도착 지점까지 갈 수 있음
 		}
-		// 그 이외의 경우는 갈 수 없음
+		// 그 이외의 경우는 도착지점까지 갈 수 없음
 		return false;
 	}
 
