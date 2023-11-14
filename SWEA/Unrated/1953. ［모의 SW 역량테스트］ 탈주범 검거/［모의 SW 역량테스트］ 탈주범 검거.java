@@ -143,7 +143,7 @@ public class Solution {
 	public static void positionCounting() {
 		for(int i=0; i<N; i++) {
 			for(int j=0; j<M; j++) {
-				if(visited[i][j] > 0 && visited[i][j] < L+1) {
+				if(visited[i][j] > 0 && visited[i][j] <= L) {
 					possiblePositionCount++; // 가능한 위치의 개수를 증가
 				}
 			}
