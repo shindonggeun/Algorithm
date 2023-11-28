@@ -10,27 +10,34 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
+
 		N = Integer.parseInt(st.nextToken());
 		M = Integer.parseInt(st.nextToken());
 		
 		parents = new int[N+1];
+		
 		for(int i=1; i<=N; i++) {
 			parents[i] = i;
 		}
 		
 		StringBuilder sb = new StringBuilder();
+		
 		for(int i=0; i<M; i++) {
 			st = new StringTokenizer(br.readLine());
-			int operation = Integer.parseInt(st.nextToken());
-			int aRoot = Integer.parseInt(st.nextToken());
-			int bRoot = Integer.parseInt(st.nextToken());
+			int command = Integer.parseInt(st.nextToken());
+			int fromVertex = Integer.parseInt(st.nextToken());
+			int toVertex = Integer.parseInt(st.nextToken());
 			
-			// 
-			if(operation == 0) {
-				union(aRoot, bRoot);
+			// 두 원소 합해주기 (합집합)
+			if(command == 0) {
+				union(fromVertex, toVertex);
 			}
+			// 두 원소가 같은 집합에 포함되어 있는지 확인하기
 			else {
-				if(isSameParent(aRoot, bRoot)) {
+				int aRoot = find(fromVertex);
+				int bRoot = find(toVertex);
+				
+				if(aRoot == bRoot) {
 					sb.append("YES").append("\n");
 				}
 				else {
@@ -38,7 +45,6 @@ public class Main {
 				}
 			}
 		}
-		
 		System.out.print(sb);
 	}
 	
@@ -46,30 +52,22 @@ public class Main {
 		if(a == parents[a]) {
 			return a;
 		}
-		parents[a] = find(parents[a]);
-		return parents[a];
+		return parents[a] = find(parents[a]);
 	}
 	
-	public static boolean union(int a, int b) {
+	public static void union(int a, int b) {
 		int aRoot = find(a);
 		int bRoot = find(b);
 		
 		if(aRoot == bRoot) {
-			return false;
+			return;
 		}
-		parents[bRoot] = aRoot;
-		return true;
-	}
-	
-	public static boolean isSameParent(int a, int b) {
-		int aRoot = find(a);
-		int bRoot = find(b);
-		
-		if(aRoot == bRoot) {
-			return true;
+		else if(aRoot > bRoot) {
+			parents[aRoot] = bRoot;
 		}
-		return false;
-		
+		else {
+			parents[bRoot] = aRoot;
+		}
 	}
 
 }
