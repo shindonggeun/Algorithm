@@ -3,34 +3,42 @@ import java.io.*;
 
 public class Main {
 	
-	static class Edge {
+	static class Edge implements Comparable<Edge> {
+		int fromVertex;
 		int toVertex;
 		int weight;
 		
-		public Edge(int toVertex, int weight) {
+		public Edge(int fromVertex, int toVertex, int weight) {
+			this.fromVertex = fromVertex;
 			this.toVertex = toVertex;
 			this.weight = weight;
 		}
+
+		@Override
+		public int compareTo(Edge o) {
+			return this.weight - o.weight;
+		}
 	}
 	
-	static int N;	// 건물의 개수
-	static int M;	// 도로의 개수
-	static ArrayList<ArrayList<Edge>> graph = new ArrayList<>();
-	static boolean[] visited;
-
+	static int N;
+	static int M;
+	static int[] parents;
+	static ArrayList<Edge> edgeList;
+	
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
-		
+
 		N = Integer.parseInt(st.nextToken());
 		M = Integer.parseInt(st.nextToken());
 		
-		visited = new boolean[N+1];
-		
-		for(int i=0; i<=N; i++) {
-			graph.add(new ArrayList<>());
+		parents = new int[N+1];
+		edgeList = new ArrayList<>();
+		for(int i=1; i<=N; i++) {
+			parents[i] = i;
 		}
 		
+
 		long totalWeight = 0;
 		for(int i=0; i<M; i++) {
 			st = new StringTokenizer(br.readLine());
@@ -38,22 +46,29 @@ public class Main {
 			int toVertex = Integer.parseInt(st.nextToken());
 			int weight = Integer.parseInt(st.nextToken());
 			
+			edgeList.add(new Edge(fromVertex, toVertex, weight));
 			totalWeight += weight;
-			
-			graph.get(fromVertex).add(new Edge(toVertex, weight));
-			graph.get(toVertex).add(new Edge(fromVertex, weight));
 		}
 		
-		long minTotalWeight = prim(1);
+		Collections.sort(edgeList);
 		
-		boolean check = true;
-		for(int i=1; i<=N; i++) {
-			if(!visited[i]) {
-				check = false;
+		long minTotalWeight = 0;
+		for(Edge edge: edgeList) {
+			// 사이클이 형성되지 않으면 해당 간선 선택
+			if(find(edge.fromVertex) != find(edge.toVertex)) {
+				union(edge.fromVertex, edge.toVertex);
+				minTotalWeight += edge.weight;
 			}
 		}
 		
-		if(check) {
+		Set<Integer> set = new HashSet<>();
+		
+		for(int i=1; i<=N; i++) {
+			int root = find(i);
+			set.add(root);
+		}
+		
+		if(set.size() == 1) {
 			System.out.println(totalWeight - minTotalWeight);
 		}
 		else {
@@ -62,29 +77,26 @@ public class Main {
 		
 	}
 	
-	public static long prim(int start) {
-		PriorityQueue<Edge> pq = new PriorityQueue<>((a, b) -> a.weight - b.weight);
-		pq.add(new Edge(start, 0));
-		long totalWeight = 0;
-		
-		while(!pq.isEmpty()) {
-			Edge now = pq.poll();
-			int to = now.toVertex;
-			int weight = now.weight;
-			
-			if(!visited[to]) {
-				visited[to] = true;
-				totalWeight += weight;
-				
-				for(Edge next: graph.get(to)) {
-					if(!visited[next.toVertex]) {
-						pq.add(next);
-					}
-				}
-			}
+	public static int find(int a) {
+		if(a == parents[a]) {
+			return a;
 		}
+		return parents[a] = find(parents[a]);
+	}
+	
+	public static void union(int a, int b) {
+		int aRoot = find(a);
+		int bRoot = find(b);
 		
-		return totalWeight;
+		if(aRoot == bRoot) {
+			return;
+		}
+		else if(aRoot > bRoot) {
+			parents[aRoot] = bRoot;
+		}
+		else {
+			parents[bRoot] = aRoot;
+		}
 	}
 
 }
