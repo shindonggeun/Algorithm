@@ -17,7 +17,6 @@ public class Main {
 	static int M;
 	static int[][] map;
 	static int[][] dist;
-	static boolean[][] visited;
 	static final int INF = Integer.MAX_VALUE;
 	// 4가지 방향 배열 (하, 상, 좌, 우)
 	static int[] dx = {1, -1, 0, 0};
@@ -31,7 +30,6 @@ public class Main {
 		M = Integer.parseInt(st.nextToken());
 		
 		map = new int[M][N];	// [0][0] ~ [M-1][N-1]
-		visited = new boolean[M][N];
 		dist = new int[M][N];
 		
 		for(int i=0; i<M; i++) {
@@ -56,8 +54,6 @@ public class Main {
 			Position now = pq.poll();
 			int nowX = now.x;
 			int nowY = now.y;
-			
-			
 				
 			for(int i=0; i<4; i++) {
 				int nextX = nowX + dx[i];
@@ -66,6 +62,7 @@ public class Main {
 				if(nextX < 0 || nextY < 0 || nextX >= M || nextY >= N) {
 					continue;
 				}
+				
 
 				int cost = dist[nowX][nowY] + map[nextX][nextY];
 				if(cost < dist[nextX][nextY]) {
