@@ -16,10 +16,9 @@ public class Main {
 	static int N;
 	static int M;
 	static int[] dist;
-	static boolean[] visited;
 	static final int INF = Integer.MAX_VALUE;
-	static ArrayList<ArrayList<Edge>> graph = new ArrayList<>();
-
+	static ArrayList<ArrayList<Edge>> graph;
+	
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
@@ -28,11 +27,11 @@ public class Main {
 		M = Integer.parseInt(st.nextToken());
 		
 		dist = new int[N+1];
-		visited = new boolean[N+1];
+		graph = new ArrayList<>();
 		
 		for(int i=0; i<=N; i++) {
-			graph.add(new ArrayList<>());
 			dist[i] = INF;
+			graph.add(new ArrayList<>());
 		}
 		
 		for(int i=0; i<M; i++) {
@@ -41,12 +40,12 @@ public class Main {
 			int toVertex = Integer.parseInt(st.nextToken());
 			int weight = Integer.parseInt(st.nextToken());
 			
-			// 양방향 간선 연결
 			graph.get(fromVertex).add(new Edge(toVertex, weight));
 			graph.get(toVertex).add(new Edge(fromVertex, weight));
 		}
 		
 		dijkstra(1);
+		
 		System.out.println(dist[N]);
 	}
 	
@@ -57,19 +56,14 @@ public class Main {
 		
 		while(!pq.isEmpty()) {
 			Edge now = pq.poll();
-			int to = now.toVertex;
-			int weight = now.weight;
+			int nowVertex = now.toVertex;
+			int nowWeight = now.weight;
 			
-			if(!visited[to]) {
-				visited[to] = true;
-				
-				for(Edge next: graph.get(to)) {
-					int cost = weight + next.weight;
-					
-					if(cost < dist[next.toVertex]) {
-						dist[next.toVertex] = cost;
-						pq.add(new Edge(next.toVertex, dist[next.toVertex]));
-					}
+			for(Edge next: graph.get(nowVertex)) {
+				int cost = nowWeight + next.weight;
+				if(cost < dist[next.toVertex]) {
+					dist[next.toVertex] = cost;
+					pq.add(new Edge(next.toVertex, dist[next.toVertex]));
 				}
 			}
 		}
