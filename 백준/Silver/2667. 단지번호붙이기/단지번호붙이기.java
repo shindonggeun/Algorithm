@@ -3,6 +3,7 @@ import java.io.*;
 
 public class Main {
 	
+	// 맵의 좌표 정보를 저장할 내부 클래스
 	static class Position {
 		int x;
 		int y;
@@ -12,89 +13,93 @@ public class Main {
 			this.y = y;
 		}
 	}
-
-	static int N;	// 지도의 크기 N 
-	static char[][] map;
-	static boolean[][] visited;
-	static List<Integer> homeNumberCountList;	// 단지내 집의 수를 저장한 리스트
-	// 4가지 방향 배열 (상, 하, 좌, 우)
-	static int[] dx = {1, -1, 0, 0};	// x축이 고정되어 있을 때 y좌표가 움직이는 방향 배열 (상, 하)
-	static int[] dy = {0, 0, -1, 1};	// y축이 고정되어 있을 때 x좌표가 움직이는 방향 배열 (좌, 우)
+	
+	static int N;	// 지도 크기
+	static int[][] map;	// 지도
+	static boolean[][] visited;	// 지도 해당 좌표 방문 여부를 나타낼 배열
+	static int houseCount;	// 총 단지수
+	static List<Integer> houseNumList;	// 단지내 집의 수를 저장할 리스트
+	// 4가지 방향 배열 (하, 상, 좌, 우)
+	static int[] dx = {1, -1, 0, 0};
+	static int[] dy = {0, 0, -1, 1};
 	
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		N = Integer.parseInt(br.readLine());
 		
-		map = new char[N][N];	// (0, 0) ~ (N-1, N-1)
+		map = new int[N][N];	// [0][0] ~ [N-1][N-1]
 		visited = new boolean[N][N];
-		homeNumberCountList = new ArrayList<>();
+		houseNumList = new ArrayList<>();
 		
-		for(int i=0; i<N; i++) {
+		for (int i=0; i<N; i++) {
 			String input = br.readLine();
-			for(int j=0; j<N; j++) {
-				map[i][j] = input.charAt(j);
+			for (int j=0; j<N; j++) {
+				map[i][j] = input.charAt(j) - '0';
 			}
 		}
 		
-		int areaCount = 0;	// 총 단지수
-		for(int i=0; i<N; i++) {
-			for(int j=0; j<N; j++) {
-				// 방문안한 좌표면서 동시에 집이 있는 좌표('1')인 경우
-				if(!visited[i][j] && map[i][j] == '1') {
-					int houseCount = bfs(i, j);	// 너비우선탐색 실시
-					homeNumberCountList.add(houseCount);	// 단지내 집의 수를 저장
-					areaCount++;	// 총 단지 수 증가
+		for (int i=0; i<N; i++) {
+			for (int j=0; j<N; j++) {
+				if (!visited[i][j] && map[i][j] == 1) {
+					int houseNum = bfs(i, j);	// 각 단지내 집의 수 반환
+					houseCount++;	// 총 단지수 증가
+					houseNumList.add(houseNum);
 				}
 			}
 		}
 		
+		// 단지내 집의 수 오름차순 정렬
+		Collections.sort(houseNumList);
+		
 		StringBuilder sb = new StringBuilder();
-		Collections.sort(homeNumberCountList);	// 단지내 집의 수를 저장한 리스트 오름차순 정렬
+		sb.append(houseCount).append("\n");
 		
-		sb.append(areaCount).append("\n");	// 총 단지수 StringBuilder에 저장
-		// 단지내 집의 수를 오름차순 순으로 출력할 수 있게끔 리스트 순회
-		for(int homeNumberCount: homeNumberCountList) {
-			sb.append(homeNumberCount).append("\n");
+		for (int houseNum: houseNumList) {
+			sb.append(houseNum).append("\n");
 		}
-		
 		System.out.print(sb);
+		
 	}
 	
+	// 각 단지 내 집의 수를 찾기 위한 너비우선탐색 메서드
 	public static int bfs(int startX, int startY) {
-		Queue<Position> queue = new LinkedList<>();	// 너비우선탐색을 실시할 수 있도록 큐 선언 및 생성
-		queue.add(new Position(startX, startY));	// 해당 시작좌표 큐에 집어넣음
-		visited[startX][startY] = true;	// 해당 시작좌표 방문처리
-		int homeCount = 1;	// 단지 내 집의 수
+		// 너비우선탐색 메서드를 이용하기 위해 큐 선언 및 생성
+		Queue<Position> queue = new LinkedList<>();
+		queue.add(new Position(startX, startY));	// 시작 좌표 정보 큐에 저장
+		visited[startX][startY] = true;	// 시작 좌표 방문처리
+		int houseCount = 1;	// 단지내 집의 수 1로 초기화
 		
-		// 큐가 빌 때 까지 반복
-		while(!queue.isEmpty()) {
+		// 너비우선탐색 메서드 시작
+		while (!queue.isEmpty()) {
+			// 해당 좌표 정보 뽑아냄
 			Position now = queue.poll();
 			int nowX = now.x;
 			int nowY = now.y;
 			
 			// 4가지 방향 탐색
-			for(int i=0; i<4; i++) {
+			for (int i=0; i<4; i++) {
 				int nextX = nowX + dx[i];
 				int nextY = nowY + dy[i];
 				
-				// 탐색한 좌표가 (0, 0) ~ (N-1, N-1) 이외의 좌표인 경우
-				if(nextX < 0 || nextY < 0 || nextX >= N || nextY >= N) {
-					continue;
+				// 탐색한 좌표가 [0][0] ~ [N-1][N-1] 이외의 좌표인 경우
+				if (nextX < 0 || nextY <0 || nextX >= N || nextY >= N) {
+					continue;	// 넘어감
 				}
 				
-				// 탐색한 좌표가 이미 방문했거나 또는 집이 없는 경우('0')
-				if(visited[nextX][nextY] || map[nextX][nextY] == '0') {
-					continue;
+				// 집이 없는 곳(0)이거나 또는 탐색한 좌표가 이미 방문처리 된 경우
+				if (map[nextX][nextY] == 0 || visited[nextX][nextY]) {
+					continue;	// 넘어감
 				}
 				
+				// 탐색한 좌표 정보 큐에 저장
 				queue.add(new Position(nextX, nextY));
-				visited[nextX][nextY] = true;
-				homeCount++;	// 단지 내 집의 수 증가
+				visited[nextX][nextY] = true;	// 탐색한 좌표 정보 방문처리
+				houseCount++;	// 단지내 집의 수 증가
 			}
 		}
 		
-		// 위의 너비우선탐색 다 실시했으면 단지 내 집의 수 반환해줌
-		return homeCount;
+		// 너비우선탐색 끝났으면 단지내 집의 수 반환
+		return houseCount;
 	}
 
 }
