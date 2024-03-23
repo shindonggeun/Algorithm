@@ -13,7 +13,7 @@ public class Main {
 
 		N = Integer.parseInt(st.nextToken());
 		S = Integer.parseInt(st.nextToken());
-		numArr = new int[N+1];    // 누적합을 이용해야하므로 N+1 까지 길이 지정해줘야함
+		numArr = new int[N];
 		
 		st = new StringTokenizer(br.readLine());
 		for (int i=0; i<N; i++) {
@@ -26,31 +26,27 @@ public class Main {
 		// 연속된 수들의 부분합 중 그 합이 S 이상이 될 때의 가장 짧은 길이 (결과값)
 		int minLength = Integer.MAX_VALUE;	
 		int sum = 0;	// 연속된 수들의 부분합 (누적합)
-		int tempLength = 0;	 // 연속된 수들의 부분합 중 그 합이 S 이상이 될 때의 길이
 		
-		// 오른쪽 인덱스가 끝까지 탐색할 수 있도록
-		while (rightIdx <= N) {
-			// 연속된 수들의 부분합이 S 미만인 경우
-			if (sum < S) {
-				sum += numArr[rightIdx];	// 누적합
-				rightIdx++;	// 오른쪽 인덱스 증가
-			}
-			// 연속된 수들의 부분합이 S 이상인 경우
-			else {
-				sum -= numArr[leftIdx];	// 누적합에서 왼쪽 인덱스가 가리키는 값 빼줌
-				leftIdx++;	// 왼쪽 인덱스 증가
-				tempLength = rightIdx - leftIdx + 1;	// 길이 구하기
-				minLength = Math.min(minLength, tempLength);	// 가장 짧은 길이 갱신
-			}
-		}
-		
-		// 연속된 수들의 부분합 중 그 합이 S 이상이 되는거 못만드는 경우
-		if (minLength == Integer.MAX_VALUE) {
-			System.out.println(0);
-		}
-		else {
-			System.out.println(minLength);
-		}
+		while (true) {
+            if (sum >= S) { // 현재 부분합이 S 이상인 경우
+            	sum -= numArr[leftIdx];
+                leftIdx++;
+                minLength = Math.min(minLength, rightIdx - leftIdx + 1);	// 가장 짧은 길이 갱신
+            } 
+            else if (rightIdx == N) { // 현재 부분합이 S 미만이면서, 오른쪽 포인터가 배열의 끝에 도달한 경우
+                break;
+            } 
+            else { // 현재 부분합이 S 미만이고, 오른쪽 포인터가 배열 끝에 도달하지 않은 경우
+                sum += numArr[rightIdx];
+                rightIdx++;
+            }
+        }
+
+        if (minLength == Integer.MAX_VALUE) { // 조건을 만족하는 부분 수열이 없는 경우
+            System.out.println(0);
+        } else {
+            System.out.println(minLength);
+        }
 	}
 
 }
