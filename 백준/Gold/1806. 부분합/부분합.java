@@ -13,7 +13,7 @@ public class Main {
 
 		N = Integer.parseInt(st.nextToken());
 		S = Integer.parseInt(st.nextToken());
-		numArr = new int[N+1];
+		numArr = new int[N+1];    // 누적합을 이용해야하므로 N+1 까지 길이 지정해줘야함
 		
 		st = new StringTokenizer(br.readLine());
 		for (int i=0; i<N; i++) {
