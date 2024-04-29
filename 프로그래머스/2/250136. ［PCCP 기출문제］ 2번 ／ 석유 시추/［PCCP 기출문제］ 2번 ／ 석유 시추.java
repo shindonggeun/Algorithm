@@ -60,7 +60,7 @@ class Solution {
             Position now = queue.poll();
             int nowX = now.x;
             int nowY = now.y;
-            
+            // 
             for (int i=0; i<4; i++) {
                 int nextX = nowX + dx[i];
                 int nextY = nowY + dy[i];
