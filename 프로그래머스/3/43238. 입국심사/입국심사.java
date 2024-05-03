@@ -9,6 +9,7 @@ class Solution {
         // 최종 심사하는데 걸리는 최대 시간
         // 최악의 경우는 가장 느린 심사대에서 모든 사람이 심사를 받는 경우이므로 *n을 해준다
         long maxTime = (long) times[times.length - 1] * n;
+        answer = maxTime;   // 일단 결과값 최악의 경우로 저장 (최종 심사하는데 걸리는 최대 시간으로)
         
         while (minTime <= maxTime) {
             long mid = (minTime + maxTime) / 2;
