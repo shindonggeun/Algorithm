@@ -3,12 +3,14 @@ import java.io.*;
 
 public class Main {
 	
-	// 간선의 정보를 저장해주는 내부 클래스
+	// 간선 정보를 나타내는 내부 클래스
 	static class Edge {
-		int toVertex;	// 진입 정점
+		int fromVertex;	// 시작 정점
+		int toVertex;	// 도착 정점
 		int weight;	// 가중치
 		
-		public Edge(int toVertex, int weight) {
+		public Edge(int fromVertex, int toVertex, int weight) {
+			this.fromVertex = fromVertex;
 			this.toVertex = toVertex;
 			this.weight = weight;
 		}
@@ -16,8 +18,8 @@ public class Main {
 	
 	static int V;	// 정점의 개수
 	static int E;	// 간선의 개수
-	static ArrayList<ArrayList<Edge>> graph = new ArrayList<>();	// 각 정점에 연결된 간선정보를 저장해주는 그래프 (인접 리스트 이용)
-	static boolean[] visited;	// 각 정점들 방문 여부를 판단해주는 방문배열
+	static int[] parents;	// 크루스칼 알고리즘(유니온 파인드 응용)을 이용하기 위한 부모 배열
+	static ArrayList<Edge> edgeList;	// 간선 목록을 저장하는 리스트
 	
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -26,60 +28,64 @@ public class Main {
 		V = Integer.parseInt(st.nextToken());
 		E = Integer.parseInt(st.nextToken());
 		
-		// 그래프에서 각 정점 생성해주는 과정
-		for(int i=0; i<=V; i++) {
-			graph.add(new ArrayList<>());
+		parents = new int[V+1];	// [1] ~ [V]
+		edgeList = new ArrayList<>();
+		for (int i=1; i<=V; i++) {
+			parents[i] = i;	// 각 점정의 부모를 자기 자신으로 설정
 		}
 		
-		visited = new boolean[V+1];	// [1] ~ [V]
-		
-		// 경로 입력하는 과정
-		for(int i=0; i<E; i++) {
+		for (int i=0; i<E; i++) {
 			st = new StringTokenizer(br.readLine());
-			int fromVertex = Integer.parseInt(st.nextToken());	// 시작 정점 입력
-			int toVertex = Integer.parseInt(st.nextToken());	// 끝 정점 (도착 정점) 입력
-			int weight = Integer.parseInt(st.nextToken());	// 가중치 입력
+			int fromVertex = Integer.parseInt(st.nextToken());
+			int toVertex = Integer.parseInt(st.nextToken());
+			int weight = Integer.parseInt(st.nextToken());
 			
-			// 양방향 간선 연결 (최소 신장 트리 -> 프림 알고리즘을 사용하기 위해서는 무방향이여야 함)
-			graph.get(fromVertex).add(new Edge(toVertex, weight));
-			graph.get(toVertex).add(new Edge(fromVertex, weight));
+			// 간선 정보 간선 리스트에 저장
+			edgeList.add(new Edge(fromVertex, toVertex, weight));
 		}
 		
-		int minTotalWeight = prim(1);	// 프림 알고리즘을 이용하여 최소 신장 트리의 가중치 구하기
-		System.out.println(minTotalWeight);	// 최소 신장 트리의 가중치 출력
-	}
-	
-	// 최소 스패닝 트리 (최소 신장 트리)를 구하기 위한 프림 알고리즘 메서드
-	public static int prim(int start) {
-		// 프림 알고리즘을 이용하기 위해 우선순위 큐 이용
-		// 각 간선의 가중치 오름차순에 따른 정렬
-		PriorityQueue<Edge> pq = new PriorityQueue<>((a, b) -> a.weight - b.weight);
-		pq.add(new Edge(start, 0));	// 시작 정점 우선순위 큐에 저장
-		int totalWeight = 0;	// 모든 정점들을 연결할 때 가중치의 합
+		// 크루스칼 알고리즘을 이용하기 위해 (최소신장트리) 간선의 가중치 오름차순 정렬
+		Collections.sort(edgeList, (a, b) -> a.weight - b.weight);
 		
-		// 프림 알고리즘 이용
-		while(!pq.isEmpty()) {
-			// 현재 간선 정보 뽑아내기
-			Edge now = pq.poll();
-			int to = now.toVertex;
-			int weight = now.weight;
+		int totalWeight = 0;	// 최소신장트리를 형성할 때 드는 최소 비용
+		
+		// 모든 간선에 대해서 순회
+		for (Edge edge: edgeList) {
+			int root1 = find(edge.fromVertex);	// 시작 정점의 루트
+			int root2 = find(edge.toVertex);	// 도착 정점의 루트
 			
-			// 해당 정점이 방문되지 않은 경우
-			if(!visited[to]) {
-				visited[to] = true;	// 해당 정점 방문 처리
-				totalWeight += weight;	// 해당 간선의 가중치 더해주기
-				// 해당 정점에 연결된 간선들 탐색
-				for(Edge next: graph.get(to)) {
-					// 연결된 간선중 도착지(정점)이 방문되지 않은 경우
-					if(!visited[next.toVertex]) {
-						pq.add(next);	// 해당 간선정보 우선순위 큐에 저장
-					}
-				}
+			// 두 정점의 루트가 다른 경우
+			if (root1 != root2) {
+				union(edge.fromVertex, edge.toVertex);	// 두 트리를 합치게끔 해서 유니온 연산 수행
+				totalWeight += edge.weight;	// 최소신장트리를 형성할 때 드는 최소 비용에 해당 간선의 가중치 누적
 			}
 		}
 		
-		// 모든 정점들을 연결할 때 가중치의 합 반환
-		return totalWeight;
+		System.out.println(totalWeight);
+	}
+	
+	// 유니온 파인드에서의 파인드 메서드
+	public static int find(int a) {
+		if (a == parents[a]) {
+			return a;
+		}
+		return parents[a] = find(parents[a]);
+	}
+	
+	// 유니온 파인드에서의 유니온 메서드
+	public static void union(int a, int b) {
+		int aRoot = find(a);
+		int bRoot = find(b);
+		
+		if (aRoot == bRoot) {
+			return;
+		}
+		else if (aRoot > bRoot) {
+			parents[aRoot] = bRoot;
+		}
+		else {
+			parents[bRoot] = aRoot;
+		}
 	}
 
 }
