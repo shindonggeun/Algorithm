@@ -58,6 +58,7 @@ class Solution {
         return answer;
     }
     
+    // 유니온 파인드에서의 파인드 메서드
     public int find(int a) {
         if (a == parents[a]) {
             return a;
@@ -65,6 +66,7 @@ class Solution {
         return parents[a] = find(parents[a]);
     }
     
+    // 유니온 파인드에서의 유니온 메서드
     public void union(int a, int b) {
         int aRoot = find(a);
         int bRoot = find(b);
