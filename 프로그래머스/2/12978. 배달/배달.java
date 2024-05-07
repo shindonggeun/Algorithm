@@ -54,7 +54,7 @@ class Solution {
         return answer;
     }
     
-    // 다익스트라 메서드
+    // 시작정점에서 각 정점까지의 최소 비용을 구하기 위한 다익스트라 메서드
     public void dijkstra(int vertex) {
         // 다익스트라 알고리즘을 사용하기 위해 우선순위 큐 선언 및 생성
         // 간선의 가중치를 기준으로 오름차순 정렬
