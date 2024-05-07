@@ -2,9 +2,10 @@ import java.util.*;
 
 class Solution {
     
+    // 프로세서의 정보를 담고있는 내부 클래스
     static class Process {
-        int priority;
-        int location;
+        int priority;   // 우선순위
+        int location;   // 위치
         
         public Process(int priority, int location) {
             this.priority = priority;
@@ -16,6 +17,7 @@ class Solution {
         int answer = 0;
         Queue<Process> queue = new LinkedList<>();
         
+        // 큐에 우선순위 및 위치를 저장하는 과정
         for (int i=0; i<priorities.length; i++) {
             queue.add(new Process(priorities[i], i));
         }
