@@ -2,6 +2,7 @@ import java.util.*;
 
 class Solution {
     
+    // 간선의 정보를 담고 있는 내부 클래스
     static class Edge {
         int toVertex;
         int weight;
