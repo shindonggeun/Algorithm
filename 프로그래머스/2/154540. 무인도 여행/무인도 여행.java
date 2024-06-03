@@ -2,76 +2,76 @@ import java.util.*;
 
 class Solution {
     
-    // 좌표 정보를 담고 있는 내부 클래스
-    static class Position {
+    static class Island {
         int x;
         int y;
         
-        public Position(int x, int y) {
+        public Island(int x, int y) {
             this.x = x;
             this.y = y;
         }
     }
     
-    static int N;
-    static int M;
+    static int n;
+    static int m;
     static char[][] map;
     static boolean[][] visited;
-    static List<Integer> islandList;
+    static List<Integer> dayList;
     // 4가지 방향 배열 (하, 상, 좌, 우)
     static int[] dx = {1, -1, 0, 0};
     static int[] dy = {0, 0, -1, 1};
     
+    
     public int[] solution(String[] maps) {
         int[] answer = {};
         
-        N = maps.length;
-        M = maps[0].length();
+        n = maps.length;
+        m = maps[0].length();
         
-        map = new char[N][M];   // [0][0] ~ [N-1][M-1];
-        visited = new boolean[N][M];
-        islandList = new ArrayList<>();
+        map = new char[n][m]; // [0][0] ~ [n-1][m-1]
+        visited = new boolean[n][m];
+        dayList = new ArrayList<>();
         
-        for (int i=0; i<N; i++) {
+        for (int i=0; i<n; i++) {
             String input = maps[i];
-            for (int j=0; j<M; j++) {
+            for (int j=0; j<m; j++) {
                 map[i][j] = input.charAt(j);
             }
         }
         
-        for (int i=0; i<N; i++) {
-            for (int j=0; j<M; j++) {
+        for (int i=0; i<n; i++) {
+            for (int j=0; j<m; j++) {
                 if (!visited[i][j] && map[i][j] != 'X') {
-                    bfs(i, j);
+                    int day = bfs(i, j);
+                    dayList.add(day);
                 }
             }
         }
         
-        if (islandList.size() == 0) {
+        if (dayList.size() == 0) {
             answer = new int[1];
             answer[0] = -1;
         }
         else {
-            Collections.sort(islandList);
-            answer = new int[islandList.size()];
+            Collections.sort(dayList);
+            answer = new int[dayList.size()];
             
-            for (int i=0; i<islandList.size(); i++) {
-                answer[i] = islandList.get(i);
-            }
+            for (int i=0; i<dayList.size(); i++) {
+                answer[i] = dayList.get(i);
+            }    
         }
-        
         
         return answer;
     }
     
-    public static void bfs(int startX, int startY) {
-        Queue<Position> queue = new LinkedList<>();
-        queue.add(new Position(startX, startY));
+    public static int bfs(int startX, int startY) {
+        Queue<Island> queue = new LinkedList<>();
+        queue.add(new Island(startX, startY));
         visited[startX][startY] = true;
         int totalDay = map[startX][startY] - '0';
         
         while (!queue.isEmpty()) {
-            Position now = queue.poll();
+            Island now = queue.poll();
             int nowX = now.x;
             int nowY = now.y;
             
@@ -79,7 +79,7 @@ class Solution {
                 int nextX = nowX + dx[i];
                 int nextY = nowY + dy[i];
                 
-                if (nextX < 0 || nextY < 0 || nextX >= N || nextY >= M) {
+                if (nextX < 0 || nextY < 0 || nextX >= n || nextY >= m) {
                     continue;
                 }
                 
@@ -87,12 +87,12 @@ class Solution {
                     continue;
                 }
                 
-                queue.add(new Position(nextX, nextY));
+                queue.add(new Island(nextX, nextY));
                 visited[nextX][nextY] = true;
-                totalDay += (map[nextX][nextY] - '0');
+                totalDay += map[nextX][nextY] - '0';
             }
         }
         
-        islandList.add(totalDay);
+        return totalDay;
     }
 }
