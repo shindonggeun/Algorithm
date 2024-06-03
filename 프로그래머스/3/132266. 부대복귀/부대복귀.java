@@ -2,7 +2,6 @@ import java.util.*;
 
 class Solution {
     
-    // 간선의 정보를 담고 있는 내부 클래스
     static class Edge {
         int toVertex;
         int weight;
@@ -19,36 +18,36 @@ class Solution {
     static ArrayList<ArrayList<Edge>> graph;
     
     public int[] solution(int n, int[][] roads, int[] sources, int destination) {
-        int[] answer = new int[sources.length];
+        int[] answer = {};
         
-        graph = new ArrayList<>();
-        dist = new int[n+1];    // [1] ~ [n]
+        dist = new int[n+1];
         visited = new boolean[n+1];
+        graph = new ArrayList<>();
         
         for (int i=0; i<=n; i++) {
-            graph.add(new ArrayList<>());
             dist[i] = INF;
+            graph.add(new ArrayList<>());
         }
         
-        for (int i=0; i<roads.length; i++) {
-            int fromVertex = roads[i][0];
-            int toVertex = roads[i][1];
+        for (int[] road: roads) {
+            int fromVertex = road[0];
+            int toVertex = road[1];
+            int weight = 1;
             
-            graph.get(fromVertex).add(new Edge(toVertex, 1));
-            graph.get(toVertex).add(new Edge(fromVertex, 1));
+            graph.get(fromVertex).add(new Edge(toVertex, weight));
+            graph.get(toVertex).add(new Edge(fromVertex, weight));
         }
         
         dijkstra(destination);
         
+        answer = new int[sources.length];
+        
         for (int i=0; i<sources.length; i++) {
-            int minDistance = dist[sources[i]];
-            
-            if (minDistance == INF) {
-                answer[i] = -1;
+            int vertex = sources[i];
+            if (dist[vertex] == INF) {
+                dist[vertex] = -1;
             }
-            else {
-                answer[i] = minDistance;
-            }
+            answer[i] = dist[vertex];
         }
         
         return answer;
@@ -71,7 +70,7 @@ class Solution {
                     int cost = nowWeight + next.weight;
                     if (cost < dist[next.toVertex]) {
                         dist[next.toVertex] = cost;
-                        pq.add(new Edge(next.toVertex, dist[next.toVertex]));
+                        pq.add(new Edge(next.toVertex, cost));
                     }
                 }
             }
