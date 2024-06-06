@@ -49,7 +49,7 @@ class Solution {
             maxOil = Math.max(maxOil, totalOil);    // 가장 많은 총 석유량 갱신
         }
         
-        answer = maxOil;
+        answer = maxOil; // 최종 결과값 저장
         return answer;
     }
     
@@ -91,7 +91,7 @@ class Solution {
             }
         }
         
-        // 너비우선탐색 완료 됐으면 해당 석유 덩어리 반환
+        // 위의 너비우선탐색 과정 완료된 경우 해당 석유 덩어리 반환
         return landCount;
     }
     
