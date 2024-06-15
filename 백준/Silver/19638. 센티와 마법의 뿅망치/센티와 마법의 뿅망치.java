@@ -2,49 +2,70 @@ import java.util.*;
 import java.io.*;
 
 public class Main {
-
+	
+	static int N; // 인구수
+	static int H; // 센티의 키
+	static int T; // 뿅망치 횟수 제한
+	static PriorityQueue<Integer> pq; // 우선순위 큐 선언
+	
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
+
+		N = Integer.parseInt(st.nextToken());
+		H = Integer.parseInt(st.nextToken());
+		T = Integer.parseInt(st.nextToken());
 		
-		int N = Integer.parseInt(st.nextToken());	// 거인의 나라 인구수
-		int centiHeight = Integer.parseInt(st.nextToken());	// 센티의 키
-		int T = Integer.parseInt(st.nextToken());	// 마법의 뿅망치 횟수 제한
+		// 우선순위 큐 생성 (값이 높은게 우선순위 높음)
+		pq = new PriorityQueue<>(Collections.reverseOrder());
 		
-		PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());	// 키가 높은애들이 우선순위 높음
-		for(int i=0; i<N; i++) {
-			pq.add(Integer.parseInt(br.readLine()));
+		for (int i=0; i<N; i++) {
+			// 해당 키 입력받아서 우선순위 큐에 저장
+			int height = Integer.parseInt(br.readLine());
+			pq.add(height);
 		}
 		
-		int count = 0;	// 뿅망치 최소 사용 횟수
-		// 뿅망치 쓰기
-		for(int i=0; i<T; i++) {
-			int height = pq.poll();	// 거인의 나라에서 최장신 뽑아내기
-			// 최장신의 키가 센티의 키 보다 작은 경우
-			if((height < centiHeight)) {
-				pq.add(height);	
-				break;
+		int count = 0; // 뿅망치 사용 횟수
+		
+		// 뿅망치 횟수 제한까지 탐색
+		for (int i=0; i<T; i++) {
+			// 우선순위 큐에 저장된 최대 키 뽑아냄
+			int maxHeight = pq.poll();
+			// 최대 키가 센티의 키보다 작은 경우
+			if (maxHeight < H) {
+				// 해당 키 우선순위 큐에 다시 저장
+				pq.add(maxHeight);
+				break; // 반복문 빠져나옴
 			}
-			else {
-				count++;
-				// 뿅망치 사용해서 키가 0이 된 경우(해당 키가 1인 경우 더 줄어들수가 없음)
-				if(height/2 == 0) {
-					pq.add(1);	
-					break;	// 해당 반복문 빠져나옴
-				}
-				else {
-					pq.add(height/2);	// 뿅망치 사용해서 키 절반으로 줄어들게한 뒤 다시 우선순위 큐에 집어넣음
-				}
+			
+			int changeHeight = maxHeight / 2; // 뿅망치 사용해서 해당 최대 키 절반으로 줄임 
+			count++; // 뿅망치 사용 횟수 증가
+			
+			// 뿅망치 사용해서 줄인 키가 0인 경우
+			if (changeHeight == 0) {
+				// 우선순위 큐에 1 저장 (뿅망치 사용하기 전 키가 1인 경우므로 더 줄어들 수 없음)
+				pq.add(1);
+				break; // 반복문 빠져나옴
 			}
+			
+			// 우선순위 큐에 뿅망치 사용한 키 저장
+			pq.add(changeHeight);
 		}
 		
-		if(pq.peek() < centiHeight) {
+		// 우선순위 큐에서 저장된 최대 키 뽑아냄
+		int maxHeight = pq.poll();
+		
+		// 해당 최대 키가 센티의 키보다 작은 경우
+		if (maxHeight < H) {
+			// 뿅망치 사용 횟수 출력
 			System.out.println("YES");
 			System.out.println(count);
 		}
+		// 해당 최대 키가 센티의 키보다 크거나 같은 경우
 		else {
+			// 해당 최대 키 출력
 			System.out.println("NO");
-			System.out.println(pq.poll());
+			System.out.println(maxHeight);
 		}
 	}
 
