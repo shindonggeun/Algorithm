@@ -65,7 +65,7 @@ public class Main {
 		int bRoot = find(b);
 		
 		if (aRoot != bRoot) {
-			parents[aRoot] = bRoot;
+			parents[bRoot] = aRoot;
 		}
 	}
 
