@@ -3,85 +3,74 @@ import java.io.*;
 
 public class Main {
 
-	static int N;
+	static int T;
+	static int F;
 	static int[] parents;
-	static int[] rank;
+	static int[] count;
+	static Map<String, Integer> friendMap;
 	
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		int testCase = Integer.parseInt(br.readLine());
 		StringTokenizer st = null;
 		StringBuilder sb = new StringBuilder();
-		for(int tc=1; tc<=testCase; tc++) {
-			Map<String, Integer> map = new HashMap<>();
-			N = Integer.parseInt(br.readLine());
-			parents = new int[N*2];
-			rank = new int[N*2];
+		
+		T = Integer.parseInt(br.readLine());
+		
+		for (int tc=1; tc<=T; tc++) {
+			F = Integer.parseInt(br.readLine());
 			
-			for(int i=0; i<N*2; i++) {
+			parents = new int[F*2+1];
+			count = new int[F*2+1];
+			
+			for (int i=1; i<=F*2; i++) {
 				parents[i] = i;
-				rank[i] = 1;
+				count[i] = 1;
 			}
 			
-			int idx = 0;
+			friendMap = new HashMap<>();
+			int idx = 1;
 			
-			for(int i=0; i<N; i++) {
+			for (int i=0; i<F; i++) {
 				st = new StringTokenizer(br.readLine());
 				
-				String fromName = st.nextToken();
-				String toName = st.nextToken();
+				String friend1 = st.nextToken();
+				String friend2 = st.nextToken();
 				
-				if(!map.containsKey(fromName)) {
-					map.put(fromName, idx);
-					idx++;
+				if (!friendMap.containsKey(friend1)) {
+					friendMap.put(friend1, idx++);
 				}
 				
-				if(!map.containsKey(toName)) {
-					map.put(toName, idx);
-					idx++;
+				if (!friendMap.containsKey(friend2)) {
+					friendMap.put(friend2, idx++);
 				}
 				
-				int aRoot = map.get(fromName);
-				int bRoot = map.get(toName);
-			
-				int network = union(aRoot, bRoot);
-				sb.append(network).append("\n");
+				int node1 = friendMap.get(friend1);
+				int node2 = friendMap.get(friend2);
 				
+				union(node1, node2);
+				
+				sb.append(count[find(node2)]).append("\n");
 			}
-			
 		}
+		
 		System.out.print(sb);
-
 	}
 	
-	public static int find(int x) {
-		if(x == parents[x]) {
-			return x;
+	public static int find(int a) {
+		if (a == parents[a]) {
+			return a;
 		}
-		parents[x] = find(parents[x]);
-		return parents[x];
+		return parents[a] = find(parents[a]);
 	}
 	
-	// 합집합 연산
-	public static int union(int a, int b) {
+	public static void union(int a, int b) {
 		int aRoot = find(a);
 		int bRoot = find(b);
 		
-		if(aRoot != bRoot) {
-			// bRoot가 부모인 경우
-			if(aRoot > bRoot) {
-				parents[aRoot] = bRoot;
-				rank[bRoot] += rank[aRoot];
-				return rank[bRoot];
-			} 
-			// aRoot가 부모인 경우
-			else {
-				parents[bRoot] = aRoot;
-				rank[aRoot] += rank[bRoot];
-			}
+		if (aRoot != bRoot) {
+			parents[bRoot] = aRoot;
+			count[aRoot] += count[bRoot];
 		}
-		
-		return rank[aRoot];
 	}
 
 }
