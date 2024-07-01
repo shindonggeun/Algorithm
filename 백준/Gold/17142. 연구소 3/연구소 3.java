@@ -3,7 +3,6 @@ import java.io.*;
 
 public class Main {
 	
-	// 바이러스의 좌표 정보 및 해당 바이러스가 퍼지는 시간을 담은 내부 클래스
 	static class Virus {
 		int x;
 		int y;
@@ -14,127 +13,113 @@ public class Main {
 			this.y = y;
 			this.time = time;
 		}
-		
 	}
 	
-	static int N;	// 연구소의 크기
-	static int M;	// 바이러스의 개수
+	static int N;
+	static int M;
 	static int[][] map;
-	static List<Virus> virusList;	// 맵에서 바이러스들의 좌표정보를 담은 리스트
-	static Virus[] virusOutput;	// 바이러스의 좌표정보를 담은 객체들을 조합으로 나타낼 배열
-	// 4가지 방향 배열 (상, 하, 좌, 우) => 배열에서는 하, 상, 좌, 우
-	static int[] dx = {1, -1, 0, 0};	// x축이 고정되어 있을 때 y좌표가 움직이는 방향 배열
-	static int[] dy = {0, 0, -1, 1};	// y축이 고정되어 있을 때 x좌표가 움직이는 방향 배열
-	static int zeroCount;	// 맵에서 빈칸(0)이 몇개 있는지는 나타낸 변수
-	static int virusSpreadMinTime;	// 모든 빈칸에 바이러스를 퍼뜨리는 최소 시간
-	
+	static List<Virus> virusList;
+	static Virus[] selectedVirus;
+	// 4가지 방향 배열 (하, 상, 좌, 우)
+	static int[] dx = {1, -1, 0, 0};
+	static int[] dy = {0, 0, -1, 1};
+	static int minSpreadTime;
 	
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
 		
-		N = Integer.parseInt(st.nextToken());	// 방 크기 입력
-		M = Integer.parseInt(st.nextToken());	// 바이러스 개수 입력
-		
-		map = new int[N][N];	// [0][0] ~ [N-1][N-1]
+		N = Integer.parseInt(st.nextToken());
+		M = Integer.parseInt(st.nextToken());
+
+		map = new int[N][N];
 		virusList = new ArrayList<>();
-		virusOutput = new Virus[M];
-		zeroCount = 0;
-		virusSpreadMinTime = Integer.MAX_VALUE;
+		selectedVirus = new Virus[M];
+		int emptyCount = 0;
 		
-		for(int i=0; i<N; i++ ) {
+		for (int i=0; i<N; i++) {
 			st = new StringTokenizer(br.readLine());
-			for(int j=0; j<N; j++) {
+			for (int j=0; j<N; j++) {
 				map[i][j] = Integer.parseInt(st.nextToken());
-				// 맵에서 해당 좌표가 바이러스(2)인 경우
-				if(map[i][j] == 2) {
+				if (map[i][j] == 2) {
 					virusList.add(new Virus(i, j, 0));
 				}
-				// 맵에서 해당 좌표가 빈칸(0)인 경우
-				else if(map[i][j] == 0) {
-					zeroCount++;	
+				else if (map[i][j] == 0) {
+					emptyCount++;
 				}
 			}
 		}
 		
-		
-		// 맵에서 빈칸(0)인 좌표가 없는 경우
-		if(zeroCount == 0) {
+		if (emptyCount == 0) {
 			System.out.println(0);
 		}
-		// 맵에서 빈칸(0)인 좌표의 개수가 0이 아닌 경우 (즉, 빈칸 하나라도 있는 경우)
 		else {
-			combination(0, 0);	// 바이러스 좌표들 조합 뽑아냄
-			if(virusSpreadMinTime == Integer.MAX_VALUE) {
-				System.out.println(-1);
-			}
-			else {
-				System.out.println(virusSpreadMinTime);
-			}
+			minSpreadTime = Integer.MAX_VALUE;
+			makeCombinationVirus(0, 0, emptyCount);
+			System.out.println(minSpreadTime == Integer.MAX_VALUE ? -1 : minSpreadTime);
+		}
+		
+	}
+	
+	public static void makeCombinationVirus(int depth, int idx, int emptyCount) {
+		if (depth == M) {
+			virusSpread(emptyCount);
+			return;
+		}
+		
+		for (int i=idx; i<virusList.size(); i++) {
+			selectedVirus[depth] = virusList.get(i);
+			makeCombinationVirus(depth + 1, i + 1, emptyCount);
 		}
 	}
 	
-	// 백트래킹 (조합 메서드)
-	public static void combination(int depth, int idx) {
-		// 깊이(선택횟수)가 M이 된 경우 (즉, 선택횟수가 바이러스 개수와 같아진 경우) => 종료조건
-		if(depth == M) {
-			bfs(zeroCount);	// 너비우선탐색 시작
-			return;	// 메서드 종료
-		}
-		
-		
-		for(int i=idx; i<virusList.size(); i++) {
-			virusOutput[depth] = virusList.get(i);
-			combination(depth+1, i+1);
-		}
-	}
-	
-	// 너비우선탐색 메서드
-	public static void bfs(int tempZeroCount) {
+	public static void virusSpread(int emptyCount) {
 		Queue<Virus> queue = new LinkedList<>();
-		boolean[][] visited = new boolean[N][N];	// [0][0] ~ [N-1][N-1]
-		// 선택된 바이러스 개수(M)까지 조합으로 뽑아낸 바이러스들을 큐에 집어넣음
-		for(int i=0; i<M; i++) {
-			queue.add(virusOutput[i]);
-			visited[virusOutput[i].x][virusOutput[i].y] = true;	// 해당 바이러스들의 좌표들 방문처리
+		boolean[][] visited = new boolean[N][N]; // [0][0] ~ [N-1][N-1]
+		
+		for (Virus virus: selectedVirus) {
+			queue.add(virus);
+			visited[virus.x][virus.y] = true;
 		}
 		
-		while(!queue.isEmpty()) {
-			Virus nowVirus = queue.poll();
-			int nowX = nowVirus.x;
-			int nowY = nowVirus.y;
-			int nowTime = nowVirus.time;
+		while (!queue.isEmpty()) {
+			Virus now = queue.poll();
+			int nowX = now.x;
+			int nowY = now.y;
+			int nowTime = now.time;
 			
-			// 4가지 방향 탐색 => 하, 상, 좌, 우
-			for(int i=0; i<4; i++) {
+			for (int i=0; i<4; i++) {
 				int nextX = nowX + dx[i];
 				int nextY = nowY + dy[i];
 				
-				// 탐색한 좌표가 [0][0] ~ [N-1][N-1] 이외의 좌표인 경우
-				if(nextX < 0 || nextY < 0 || nextX >= N || nextY >= N) {
-					continue;	// 넘어감
+				if (nextX < 0 || nextY < 0 || nextX >= N || nextY >= N) {
+					continue;
 				}
 				
-				// 탐색한 좌표가 이미 방문했거나 또는 벽(1)인 경우
-				if(visited[nextX][nextY] || map[nextX][nextY] == 1) {
-					continue;	// 넘어감
+				if (visited[nextX][nextY] || map[nextX][nextY] == 1) {
+					continue;
 				}
 				
-				// 탐색한 좌표가 빈칸(0)인 경우 => 바이러스가 감염시켜버리므로 빈칸의 개수 줄여줌
-				if(map[nextX][nextY] == 0) {
-					tempZeroCount--;	// 빈칸의 개수 줄여줌
+				if (map[nextX][nextY] == 0) {
+					emptyCount--;
 				}
 				
-				// 맵에서 빈칸의 개수가 0이 된 경우 => 바이러스에 의해 모두 감염됨
-				if(tempZeroCount == 0) {
-					virusSpreadMinTime = Math.min(virusSpreadMinTime, nowTime + 1);
-					return;	// 메서드 종료
+				// 이부분 중요!
+				// 큐 while문에 해당 조건을 걸면 답이 이상하게 나옴
+				// 이유: while문 안에서 빈칸의 개수가 0이 되는 시점(즉, 바이러스가 다 퍼진 시점)을 정확히 판단하지 못하기 때문
+				// 빈칸의 개수가 0이 되는 즉시 (즉, 바이러스가 다 퍼진 경우) 즉시 최소 확산 시간을 갱신하고 함수를 종료해야함
+				
+				// 빈칸의 개수가 0이 된 경우 (즉, 바이러스 다 퍼트린 경우)
+				if (emptyCount == 0) {
+					minSpreadTime = Math.min(minSpreadTime, nowTime + 1);
+					return;
 				}
 				
 				visited[nextX][nextY] = true;
 				queue.add(new Virus(nextX, nextY, nowTime + 1));
 			}
 		}
+		
 	}
-	
+
 }
