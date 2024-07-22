@@ -11,24 +11,25 @@ class Solution {
         int currentTime = 0;
         int totalWaitTime = 0;
         int idx = 0;
-        int jobCount = jobs.length;
+        int finishJobCount = 0;
         
-        while (idx < jobCount || !pq.isEmpty()) {
-            while (idx < jobCount && jobs[idx][0] <= currentTime) {
+        while (finishJobCount < jobs.length) {
+            while (idx < jobs.length && jobs[idx][0] <= currentTime) {
                 pq.add(jobs[idx++]);
             }
             
-            if (pq.isEmpty()) {
-                currentTime = jobs[idx][0];
-            }
-            else {
+            if (!pq.isEmpty()) {
                 int[] nowJob = pq.poll();
                 currentTime += nowJob[1];
                 totalWaitTime += currentTime - nowJob[0];
+                finishJobCount++;
+            } 
+            else {
+                currentTime = jobs[idx][0];
             }
         }
         
-        answer = totalWaitTime / jobCount;
+        answer = totalWaitTime / jobs.length;
         return answer;
     }
 }
