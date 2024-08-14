@@ -2,46 +2,49 @@ import java.util.*;
 import java.io.*;
 
 public class Main {
-
+	
+	static int N; // 메시지 길이 (숫자 개수)
+	static int C;
+	static Map<Integer, Integer> map; // 각 숫자마다 빈도수를 저장할 map (key: 해당 숫자, value: 빈도수)
+	
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
 		
-		int N = Integer.parseInt(st.nextToken());
-		int C = Integer.parseInt(st.nextToken());
-		// LinkedHashMap을 이용해서 입력된 순서 보장되게끔!
-		Map<Integer, Integer> map = new LinkedHashMap<>();	// key: 숫자, value: 숫자가 등장한 횟수
+		N = Integer.parseInt(st.nextToken());
+		C = Integer.parseInt(st.nextToken());
+		
+		map = new LinkedHashMap<>(); // 순서가 보장된 HashMap 생성
 		
 		st = new StringTokenizer(br.readLine());
-		for(int i=0; i<N; i++) {
+		
+		for (int i=0; i<N; i++) {
 			int num = Integer.parseInt(st.nextToken());
+			// 해당 숫자에 대한 빈도수 저장
 			map.put(num, map.getOrDefault(num, 0) + 1);
 		}
 		
-		List<Integer> list = new ArrayList<>(map.keySet());	
-		Collections.sort(list, new Comparator<Integer>() {
-
-			@Override
-			public int compare(Integer i1, Integer i2) {
-				// 두 숫자의 등장한 횟수(빈도수)가 같은 경우 먼저 나온 숫자가 나오도록
-				if(map.get(i1) == map.get(i2)) {
-					return 0;	// 변화없음
-				}
-				// 두 숫자의 빈도수가 다른 경우 
-				else {
-					return map.get(i2) - map.get(i1); // 빈도수 높은순으로 정렬(내림차순 정렬)
-				}
-			}
-			
+		// map에 저장된 key 값들을 리스트화
+		List<Integer> list = new ArrayList<>(map.keySet());
+		
+		// 리스트에 저장된 key값들 커스텀 정렬
+		Collections.sort(list, (key1, key2) -> {
+			// 맵에 저장된 빈도수를 기준으로 내림차순 정렬 (빈도수가 높은 순으로 key값 정렬)
+			return map.get(key2) - map.get(key1);
 		});
 		
 		StringBuilder sb = new StringBuilder();
-		for(int key: list) {
-			for(int i=0; i<map.get(key); i++) {
-				sb.append(key).append(" ");
+		
+		// key값들이 저장된 리스트 탐색
+		for (int num: list) {
+			// 해당 key값의 빈도수만큼 반복
+			for (int i=0; i<map.get(num); i++) {
+				// 해당 key값 출력할 수 있게끔 StringBuilder에 저장
+				sb.append(num).append(" ");
 			}
 		}
-		System.out.print(sb);
+		
+		System.out.println(sb);
 
 	}
 
