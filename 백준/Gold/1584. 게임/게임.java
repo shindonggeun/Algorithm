@@ -3,6 +3,7 @@ import java.io.*;
 
 public class Main {
 	
+	// 좌표 정보를 담고 있는 내부 클래스
 	static class Position {
 		int x;
 		int y;
@@ -13,14 +14,14 @@ public class Main {
 		}
 	}
 	
-	static final int SIZE = 500;
-	static int N;
-	static int M;
-	static int[][] map;
-	static int[][] dist;
-	static final int INF = Integer.MAX_VALUE;
-	static final int DANGER = 1;
-	static final int DEATH = 2;
+	static final int SIZE = 500; // 구역의 크기를 나타내는 상수 (지도의 크기)
+	static int N; // 위험한 구역의 개수
+	static int M; // 죽음의 구역의 개수
+	static int[][] map; // 각 좌표의 해당 구역 정보를 담고 있는 2차원 배열 지도 (0: 안전, 1: 위험, 2: 죽음)
+	static int[][] dist; // 시작지점에서 도착지점까지의 최단 거리를 담고 있는 2차원 배열
+	static final int INF = Integer.MAX_VALUE; // 무한대를 나타내는 상수
+	static final int DANGER = 1; // 위험한 구역을 나타내는 상수
+	static final int DEATH = 2; // 죽음의 구역을 나타내는 상수
 	// 4가지 방향 배열 (하, 상, 좌, 우)
 	static int[] dx = {1, -1, 0, 0};
 	static int[] dy = {0, 0, -1, 1};
@@ -29,98 +30,116 @@ public class Main {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = null;
 		
-		map = new int[SIZE+1][SIZE+1];
-		dist = new int[SIZE+1][SIZE+1];
+		map = new int[SIZE+1][SIZE+1]; // [0][0] ~ [500][500]
+		dist = new int[SIZE+1][SIZE+1]; // [0][0] ~ [500][500]
 		
 		for (int i=0; i<=SIZE; i++) {
 			for (int j=0; j<=SIZE; j++) {
-				dist[i][j] = INF;
+				dist[i][j] = INF; // 초기 각 좌표의 최단 거리를 무한대로 초기화
 			}
 		}
 		
+		// 1. 위험한 구역을 설정하는 과정
 		N = Integer.parseInt(br.readLine());
 		for (int i=0; i<N; i++) {
-			st = new StringTokenizer(br.readLine());
-			int x1 = Integer.parseInt(st.nextToken());
-			int y1 = Integer.parseInt(st.nextToken());
-			int x2 = Integer.parseInt(st.nextToken());
-			int y2 = Integer.parseInt(st.nextToken());
+			st = new StringTokenizer(br.readLine()); 
+			int x1 = Integer.parseInt(st.nextToken()); // 위험한 구역의 한 모서리 x1 좌표
+			int y1 = Integer.parseInt(st.nextToken()); // 위험한 구역의 한 모서리 y1 좌표
+			int x2 = Integer.parseInt(st.nextToken()); // 위험한 구역의 반대편 모서리 x2 좌표
+			int y2 = Integer.parseInt(st.nextToken()); // 위험한 구역의 반대편 모서리 y2 좌표
 			
+			// 위험한 구역 설정: 해당 좌표 범위를 위험한 구역으로 설정
 			setupZone(x1, y1, x2, y2, DANGER);
 		}
 		
+		// 2. 죽음의 구역을 설정하는 과정
 		M = Integer.parseInt(br.readLine());
 		for (int i=0; i<M; i++) {
 			st = new StringTokenizer(br.readLine());
-			int x1 = Integer.parseInt(st.nextToken());
-			int y1 = Integer.parseInt(st.nextToken());
-			int x2 = Integer.parseInt(st.nextToken());
-			int y2 = Integer.parseInt(st.nextToken());
+			int x1 = Integer.parseInt(st.nextToken()); // 죽음의 구역의 한 모서리 x1 좌표
+			int y1 = Integer.parseInt(st.nextToken()); // 죽음의 구역의 한 모서리 y1 좌표
+			int x2 = Integer.parseInt(st.nextToken()); // 죽음의 구역의 반대편 모서리 x2 좌표
+			int y2 = Integer.parseInt(st.nextToken()); // 죽음의 구역의 반대편 모서리 y2 좌표
 			
+			// 죽음의 구역 설정: 해당 좌표 범위를 죽음의 구역으로 설정
 			setupZone(x1, y1, x2, y2, DEATH);
 		}
 		
-		zeroOneBfs(0, 0);
-
+		zeroOneBfs(0, 0); // 시작지점에서부터 도착지점까지의 최단거리를 구하는 메서드 호출
+		
+		// 도착지점까지의 최단 거리 (잃은 생명의 최솟값)가 무한대 상수 (즉, 갈수 없는 경우) -1 출력
+		// 갈수 있는 경우 해당 도착지점까지의 최단거리 (잃은 생명의 최소값) 출력
 		System.out.println(dist[SIZE][SIZE] == INF ? -1 : dist[SIZE][SIZE]);
 	}
 	
+	// 위험한 구역이나 죽음의 구역을 설정하는 메서드
 	public static void setupZone(int x1, int y1, int x2, int y2, int value) {
-		int minX = Math.min(x1, x2);
-		int minY = Math.min(y1, y2);
+		int minX = Math.min(x1, x2); // x 좌표중 작은 값 설정
+		int minY = Math.min(y1, y2); // y 좌표중 작은 값 설정
 		
-		int maxX = Math.max(x1, x2);
-		int maxY = Math.max(y1, y2);
+		int maxX = Math.max(x1, x2); // x 좌표중 큰 값 설정
+		int maxY = Math.max(y1, y2); // y 좌표중 큰 값 설정
 		
+		// 지정된 좌표 범위 내 모든 위치를 value 값 (위험: 1, 죽음: 2)으로 설정
 		for (int i=minX; i<=maxX; i++) {
 			for (int j=minY; j<=maxY; j++) {
+				// 이미 설정된 값보다 높은 위험도를 가진 구역이 아닌 경우
+				// 즉, 죽음이 위험보다 우선순위 높으므로 해당 값으로 설정해줘야함
 				if (map[i][j] < value) {
-					map[i][j] = value;
+					map[i][j] = value; // 구역을 해당 값으로 설정 (1: 위험, 2: 죽음)
 				}
 			}
 		}
 	}
 	
+	// 시작지점에서부터 도착지점까지 최단거리를 찾는 메서드 (0-1 너비 우선 탐색)
 	public static void zeroOneBfs(int startX, int startY) {
+		// 0-1 너비 우선 탐색 알고리즘을 이용하기 위해 덱 선언 및 생성
 		Deque<Position> deque = new ArrayDeque<>();
-		deque.add(new Position(startX, startY));
-		dist[startX][startY] = 0;
+		deque.add(new Position(startX, startY)); // 덱에 시작 좌표 정보 저장
+		dist[startX][startY] = 0; // 시작 좌표의 최단 거리 0으로 초기화
 		
 		while (!deque.isEmpty()) {
+			// 덱에서 현재 좌표 정보 뽑아냄
 			Position now = deque.poll();
 			int nowX = now.x;
 			int nowY = now.y;
 			
+			// 4가지 방향 탐색
 			for (int i=0; i<4; i++) {
 				int nextX = nowX + dx[i];
 				int nextY = nowY + dy[i];
 				
+				// 탐색한 좌표가 [0][0] ~ [500][500] 이외의 좌표인 경우
 				if (nextX < 0 || nextY < 0 || nextX > SIZE || nextY > SIZE) {
-					continue;
+					continue; // 다음 방향 탐색하도록 넘어감
 				}
 				
+				// 탐색한 좌표가 죽음의 구역(2)인 경우
 				if (map[nextX][nextY] == DEATH) {
-					continue;
+					continue; // 다음 방향 탐색하도록 넘어감
 				}
 				
+				// 탐색한 좌표까지의 거리 계산 (잃은 체력 즉, 위험도 계산)
 				int cost = dist[nowX][nowY] + map[nextX][nextY];
 				
+				// 탐색한 좌표까지의 거리가 탐색한 좌표의 최단 거리보다 작은 경우
 				if (cost < dist[nextX][nextY]) {
-					dist[nextX][nextY] = cost;
+					dist[nextX][nextY] = cost; // 최단 거리 갱신
 					
+					// 탐색한 좌표가 안전한 구역(0)인 경우
 					if (map[nextX][nextY] == 0) {
-						deque.addFirst(new Position(nextX, nextY));
+						deque.addFirst(new Position(nextX, nextY)); // 우선적으로 탐색한 좌표 정보를 덱의 앞에 추가해줌
 					}
+					// 탐색한 좌표가 위험한 구역(1)인 경우
 					else if (map[nextX][nextY] == DANGER) {
-						deque.addLast(new Position(nextX, nextY));
+						deque.addLast(new Position(nextX, nextY)); // 덱의 뒤에 탐색한 좌표 정보를 추가해줌
 					}
 				}
-				
-				
 			}
+			
 		}
 	}
-	
 	
 
 }
