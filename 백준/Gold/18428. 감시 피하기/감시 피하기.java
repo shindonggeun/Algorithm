@@ -2,7 +2,7 @@ import java.util.*;
 import java.io.*;
 
 public class Main {
-
+	
 	static class Teacher {
 		int x;
 		int y;
@@ -15,12 +15,12 @@ public class Main {
 	
 	static int N;
 	static char[][] map;
-	static boolean resultAvoid;
 	static List<Teacher> teacherList;
+	static boolean resultAvoid;
 	// 4가지 방향 배열 (하, 상, 좌, 우)
 	static int[] dx = {1, -1, 0, 0};
 	static int[] dy = {0, 0, -1, 1};
-	
+
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = null;
@@ -28,7 +28,6 @@ public class Main {
 		N = Integer.parseInt(br.readLine());
 		
 		map = new char[N][N]; // [0][0] ~ [N-1][N-1]
-		resultAvoid = false;
 		teacherList = new ArrayList<>();
 		
 		for (int i=0; i<N; i++) {
@@ -41,19 +40,20 @@ public class Main {
 			}
 		}
 		
+		resultAvoid = false;
 		buildWall(0);
+		
+		System.out.println(resultAvoid ? "YES" : "NO");
 
-		if (resultAvoid) {
-			System.out.println("YES");
-		}
-		else {
-			System.out.println("NO");
-		}
 	}
 	
 	public static void buildWall(int depth) {
 		if (depth == 3) {
-			teacherWatch();
+			watchCheck();
+			return;
+		}
+		
+		if (resultAvoid) {
 			return;
 		}
 		
@@ -68,17 +68,17 @@ public class Main {
 		}
 	}
 	
-	public static void teacherWatch() {
+	public static void watchCheck() {
 		boolean avoidCheck = true;
 		
-		for (Teacher now: teacherList) {
-			int nowX = now.x;
-			int nowY = now.y;
+		for (Teacher teacher: teacherList) {
+			int nowX = teacher.x;
+			int nowY = teacher.y;
 			
-			// 4가지 방향 탐색
 			for (int i=0; i<4; i++) {
 				int nextX = nowX;
 				int nextY = nowY;
+				
 				while (true) {
 					nextX += dx[i];
 					nextY += dy[i];
@@ -96,6 +96,10 @@ public class Main {
 						break;
 					}
 				}
+			}
+			
+			if (!avoidCheck) {
+				break;
 			}
 		}
 		
