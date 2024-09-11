@@ -59,6 +59,7 @@ class Solution {
         }
         
         answer = health;
+        
         return answer;
     }
 }
