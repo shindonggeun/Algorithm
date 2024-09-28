@@ -58,7 +58,7 @@ class Solution {
         
         answer = minTotalCost; // 결과값에 최저 예상 택시요금 저장
         
-        return answer;
+        return answer; // 최종 결과값 반환
     }
     
     // 다익스트라 알고리즘을 이용하여 시작 정점에서부터 다른 모든 정점까지의 최단거리를 계산하는 메서드
