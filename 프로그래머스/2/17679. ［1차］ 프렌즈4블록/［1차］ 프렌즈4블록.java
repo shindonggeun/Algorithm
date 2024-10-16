@@ -50,7 +50,6 @@ class Solution {
                 break; // 무한반복 빠져나옴 (게임 종료)
             }
             
-            
             int removeCount = blockRemove(m, n); // 2x2 블록들 제거한 뒤 제거한 개수 저장
             answer += removeCount; // 총 제거한 블록 수 누적
             blockDown(m, n); // 블록을 아래로 떨어뜨리기
