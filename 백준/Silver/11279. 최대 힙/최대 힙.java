@@ -3,18 +3,22 @@ import java.io.*;
 
 public class Main {
 
+	static int N;
+	static PriorityQueue<Integer> pq;
+	
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
 		
-		int N = Integer.parseInt(st.nextToken());
-		PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());	// 우선순위 큐 이용 (높은 숫자순으로 우선순위 결정)
+		N = Integer.parseInt(br.readLine());
+		
+		pq = new PriorityQueue<>(Collections.reverseOrder());
+		
 		StringBuilder sb = new StringBuilder();
-		
-		for(int i=0; i<N; i++) {
-			int command = Integer.parseInt(br.readLine());
-			if(command == 0) {
-				if(pq.size() == 0) {
+		for (int i=0; i<N; i++) {
+			int num = Integer.parseInt(br.readLine());
+			
+			if (num == 0) {
+				if (pq.isEmpty()) {
 					sb.append(0).append("\n");
 				}
 				else {
@@ -22,9 +26,10 @@ public class Main {
 				}
 			}
 			else {
-				pq.add(command);
+				pq.add(num);
 			}
 		}
+		
 		System.out.print(sb);
 
 	}
