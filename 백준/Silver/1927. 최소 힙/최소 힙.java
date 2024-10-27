@@ -3,29 +3,33 @@ import java.io.*;
 
 public class Main {
 
-	static int N;
-	static PriorityQueue<Integer> pq;
+	static int N; // 연산의 개수
+	static PriorityQueue<Integer> pq; // 우선순위 큐 선언
 	
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		
 		N = Integer.parseInt(br.readLine());
-		pq = new PriorityQueue<>();
+		pq = new PriorityQueue<>(); // 우선순위 큐 생성 (최소힙 -> 낮은 값이 먼저 나오도록)
 		
 		StringBuilder sb = new StringBuilder();
 		for (int i=0; i<N; i++) {
 			int num = Integer.parseInt(br.readLine());
 			
+			// 입력한 숫자가 0인 경우
 			if (num == 0) {
+				// 우선순위 큐가 비어있는 경우
 				if (pq.isEmpty()) {
-					sb.append(0).append("\n");
+					sb.append(0).append("\n"); // 0을 출력하도록
 				}
+				// 우선순위 큐가 비어있지 않은 경우
 				else {
-					sb.append(pq.poll()).append("\n");
+					sb.append(pq.poll()).append("\n"); // 우선순위 큐에서 가장 작은 값 뽑아내서 출력하도록
 				}
 			}
+			// 입력한 숫자가 0이 아닌 경우
 			else {
-				pq.add(num);
+				pq.add(num); // 우선순위 큐에 해당 숫자 저장
 			}
 		}
 		
