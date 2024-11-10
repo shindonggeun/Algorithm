@@ -17,17 +17,18 @@ class Solution {
         });
         
         for (int[] score: scores) {
-            if (maxScore <= score[1]) {
-                maxScore = score[1];
-                int totalScore = score[0] + score[1];
-                if (totalScore > wanhoTotalScore) {
-                    rank++;
-                }
-            }
-            else {
+            if (score[1] < maxScore) {
                 if (score.equals(wanhoScore)) {
                     rank = -1;
                     break;
+                }
+            }
+            else {
+                maxScore = Math.max(maxScore, score[1]);
+                int totalScore = score[0] + score[1];
+                
+                if (totalScore > wanhoTotalScore) {
+                    rank++;
                 }
             }
         }
