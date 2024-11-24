@@ -120,7 +120,6 @@ class Solution {
             nowX++; // 현재 행의 번호 증가
         }
         
-        
         return tempOil; // 계산된 총 석유량 반환
     }
 }
