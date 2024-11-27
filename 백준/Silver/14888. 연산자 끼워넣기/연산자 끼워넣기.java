@@ -2,63 +2,66 @@ import java.util.*;
 import java.io.*;
 
 public class Main {
-	
-	static int[] numArr;	// 숫자 저장할 배열
-	static int N;		// 숫자 개수
-	static int[] operator = new int[4];	// 연산자 수 
-	static int min = Integer.MAX_VALUE;	// 최소값
-	static int max = Integer.MIN_VALUE;	// 최대값
+
+	static int N;
+	static int[] numArr;
+	static int[] operationArr;
+	static int minValue;
+	static int maxValue;
 	
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		N = Integer.parseInt(st.nextToken());
+		StringTokenizer st = null;
+		
+		N = Integer.parseInt(br.readLine());
+		
+		numArr = new int[N];
+		operationArr = new int[4];
 		
 		st = new StringTokenizer(br.readLine());
-		numArr = new int[N];
-		
-		for(int i=0; i<N; i++) {
+		for (int i=0; i<N; i++) {
 			numArr[i] = Integer.parseInt(st.nextToken());
 		}
+		
 		st = new StringTokenizer(br.readLine());
-		for(int i=0; i<4; i++) {
-			operator[i] = Integer.parseInt(st.nextToken());
+		for (int i=0; i<4; i++) {
+			operationArr[i] = Integer.parseInt(st.nextToken());
 		}
 		
-		dfs(numArr[0], 1);
-		System.out.println(max);
-		System.out.println(min);
+		minValue = Integer.MAX_VALUE;
+		maxValue = Integer.MIN_VALUE;
+		
+		calculate(1, numArr[0]);
+		
+		System.out.println(maxValue);
+		System.out.println(minValue);
 	}
-	// 순열 메서드 이용하기
-	public static void dfs(int num, int idx) {
-		if(idx == N) {
-			//System.out.println(num);
-			max = Math.max(max, num);
-			min = Math.min(min, num);
+	
+	public static void calculate(int depth, int value) {
+		if (depth == N) {
+			maxValue = Math.max(maxValue, value);
+			minValue = Math.min(minValue, value);
 			return;
 		}
 		
-		for(int i=0; i<4; i++) {
-			if(operator[i] > 0) {
-				operator[i]--;
-				// 덧셈
-				if(i == 0) {
-					dfs(num + numArr[idx], idx+1);
+		for (int i=0; i<4; i++) {
+			if (operationArr[i] > 0) {
+				operationArr[i]--;
+				
+				if (i == 0) {
+					calculate(depth+1, value + numArr[depth]);
 				}
-				// 뺄셈
-				else if(i == 1) {
-					dfs(num - numArr[idx], idx+1);
+				else if (i == 1) {
+					calculate(depth+1, value - numArr[depth]);
 				}
-				// 곱셈
-				else if(i == 2) {
-					dfs(num * numArr[idx], idx+1);
+				else if (i == 2) {
+					calculate(depth+1, value * numArr[depth]);
 				}
-				// 나눗셈
-				else if(i == 3) {
-					dfs(num / numArr[idx], idx+1);
+				else {
+					calculate(depth+1, value / numArr[depth]);
 				}
 				
-				operator[i]++;
+				operationArr[i]++;
 			}
 		}
 	}
