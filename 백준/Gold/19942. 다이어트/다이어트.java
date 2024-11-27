@@ -36,7 +36,8 @@ public class Main {
 		combination = new ArrayList<>();
 		resultCombination = new ArrayList<>();
 		
-		generateCombination(new ArrayList<>(), 0);
+//		generateCombination(new ArrayList<>(), 0);
+		dfs(0, 0, 0, 0, 0, 0);
 		
 		if (minCost == Integer.MAX_VALUE) {
 			System.out.println(-1);
@@ -53,29 +54,9 @@ public class Main {
 		System.out.println(sb);
 	}
 	
-	public static void generateCombination(List<Integer> combination, int idx) {
-		calculateMinCost(combination);
-		
-		for (int i=idx; i<N; i++) {
-			combination.add(i);
-			generateCombination(combination, i + 1);
-			combination.remove(combination.size() - 1);
-		}
-	}
-	
-	public static void calculateMinCost(List<Integer> combination) {
-		int sumP = 0; // 단백질의 영양성분 합
-		int sumF = 0; // 지방의 영양성분 합
-		int sumS = 0; // 탄수화물의 영양성분 합
-		int sumV = 0; // 비타민들의 영양성분 합
-		int sumCost = 0; // 식재료들의 비용 합
-		
-		for (int idx: combination) {
-			sumP += ingredient[idx][0];
-			sumF += ingredient[idx][1];
-			sumS += ingredient[idx][2];
-			sumV += ingredient[idx][3];
-			sumCost += ingredient[idx][4];
+	public static void dfs(int depth, int sumP, int sumF, int sumS, int sumV, int sumCost) {
+		if (sumCost > minCost) {
+			return;
 		}
 		
 		if (sumP >= minValue[0] && sumF >= minValue[1] && 
@@ -84,7 +65,57 @@ public class Main {
 				minCost = sumCost;
 				resultCombination = new ArrayList<>(combination);
 			}
+			return;
 		}
+		
+		if (depth == N) {
+			return;
+		}
+		
+		combination.add(depth);
+		dfs(depth+1, 
+				sumP + ingredient[depth][0], 
+				sumF + ingredient[depth][1],
+				sumS + ingredient[depth][2],
+				sumV + ingredient[depth][3],
+				sumCost + ingredient[depth][4]);
+		combination.remove(Integer.valueOf(depth));
+		
+		dfs(depth+1, sumP, sumF, sumS, sumV, sumCost);
 	}
+	
+//	public static void generateCombination(List<Integer> combination, int idx) {
+//		calculateMinCost(combination);
+//		
+//		for (int i=idx; i<N; i++) {
+//			combination.add(i);
+//			generateCombination(combination, i + 1);
+//			combination.remove(combination.size() - 1);
+//		}
+//	}
+//	
+//	public static void calculateMinCost(List<Integer> combination) {
+//		int sumP = 0; // 단백질의 영양성분 합
+//		int sumF = 0; // 지방의 영양성분 합
+//		int sumS = 0; // 탄수화물의 영양성분 합
+//		int sumV = 0; // 비타민들의 영양성분 합
+//		int sumCost = 0; // 식재료들의 비용 합
+//		
+//		for (int idx: combination) {
+//			sumP += ingredient[idx][0];
+//			sumF += ingredient[idx][1];
+//			sumS += ingredient[idx][2];
+//			sumV += ingredient[idx][3];
+//			sumCost += ingredient[idx][4];
+//		}
+//		
+//		if (sumP >= minValue[0] && sumF >= minValue[1] && 
+//				sumS >= minValue[2] && sumV >= minValue[3]) {
+//			if (sumCost < minCost) {
+//				minCost = sumCost;
+//				resultCombination = new ArrayList<>(combination);
+//			}
+//		}
+//	}
 
 }
