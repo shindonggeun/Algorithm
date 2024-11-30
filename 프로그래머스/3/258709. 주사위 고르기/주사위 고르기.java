@@ -18,7 +18,7 @@ class Solution {
         // a가 선택할 주사위 조합 생성하는 메서드 호출
         generateCombination(dice, 0, 0);
         
-        answer = new int[N/2]; // 최종 결과를 저장할 배열 초가화
+        answer = new int[N/2]; // 최종 결과를 저장할 배열 초기화
         
         for (int i=0; i<N/2; i++) {
             // 최종 결과 배열 인덱스 값 1부터 시작하도록 변환하여 저장
