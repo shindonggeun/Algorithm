@@ -88,8 +88,9 @@ public class Main {
 			}
 			
 			int newHp = hp - distance + H;
-			if (newHp >= distToHome[i] && milkDrunk + 1 > maxMilkDrunk) {
-				maxMilkDrunk = milkDrunk + 1;
+			if (newHp >= distToHome[i]) {
+				// 마신 우유 개수가 최대값을 갱신하면 업데이트
+				maxMilkDrunk = Math.max(maxMilkDrunk, milkDrunk + 1);
 			}
 			
 			visited[i] = true;
