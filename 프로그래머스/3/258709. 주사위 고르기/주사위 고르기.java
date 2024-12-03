@@ -35,7 +35,7 @@ class Solution {
             // 현재 조합의 승리 횟수를 계산하는 메서드 호출
             int winCount = calculateWin(dice, combination);
             
-            // 혀냊 조합의 승리 횟수가 최대 승리 횟수보다 큰 경우
+            // 현재 조합의 승리 횟수가 최대 승리 횟수보다 큰 경우
             if (winCount > maxWinCount) {
                 maxWinCount = winCount; // 최대 승리 횟수 갱신
                 bestCombination = combination.clone(); // A의 승리 확률이 제일 높은 최고의 조합을 현재 조합으로 복사
