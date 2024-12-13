@@ -8,6 +8,7 @@ class Solution {
         
         visited = new boolean[dungeons.length]; // 던전 개수만큼 방문 여부 체크할 배열의 방 만들어줌
         maxDungeonCount = Integer.MIN_VALUE; // 탐험할 수 있는 최대 던전 수 최소값으로 초기화
+        
         dfs(0, dungeons, k); // 깊이우선탐색 실시
         
         answer = maxDungeonCount; // 결과값 갱신
