@@ -28,7 +28,6 @@ class Solution {
             }
         }
         
-        // 결과값 반환
         return answer;
     }
 }
