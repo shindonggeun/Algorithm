@@ -19,6 +19,7 @@ class Solution {
         Arrays.fill(answer, baseValue); // 해당 결과 배열의 모든 원소 기본값으로 채움
         
         int idx = n - 1; // 배열의 마지막 인덱스 설정
+        
         // 나머지 값 횟수만큼 반복 (해당 결과값 오름차순으로 정렬해줄 수 있게끔 마지막 인덱스부터 접근)
         for (int i=0; i<remainder; i++) {
             answer[idx]++; // 현재 인덱스에 해당하는 원소값 증가 (+1)
