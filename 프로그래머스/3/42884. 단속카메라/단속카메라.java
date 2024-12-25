@@ -3,6 +3,7 @@ import java.util.*;
 class Solution {
     public int solution(int[][] routes) {
         int answer = 0;
+        
         // 고속도로를 이동하는 차량의 경로를 진출 지점으로 오름차순 정렬
         Arrays.sort(routes, (a, b) -> a[1] - b[1]);
         
