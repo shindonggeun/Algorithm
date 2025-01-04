@@ -36,7 +36,7 @@ class Solution {
             graph.get(toVertex).add(new Edge(fromVertex, weight));
         }
         
-        // s, a, b각각에 대해 다익스트라 알고리즘 수행
+        // 1. s, a, b각각에 대해 다익스트라 알고리즘 수행
         // s(두 사람이 같이 동시에 출발하는 지점)에서부터 각 정점까지의 최단거리 구하기
         int[] distFromS = dijkstra(s, n); 
         // a(A의 도착지점)에서부터 각 정점까지의 최단거리 구하기
@@ -47,7 +47,7 @@ class Solution {
         // 두 사람이 s에서 출발하여 각각의 도착지점까지 갈 때 최저 예상 택시요금
         int minTotalCost = Integer.MAX_VALUE; // 최저 예상 택시요금 최대값으로 초기화
         
-        // 모든 지점을 환승 지점으로 고려하여 최소 비용 계산하기
+        // 2. 모든 지점을 환승 지점으로 고려하여 최소 비용 계산하기
         for (int i=1; i<=n; i++) {
             // 각 출발지(s, a, b)에서부터 시작하여 각 정점까지의 최단거리가 무한대(갈 수 없는 경로)가 아닌 경우
             if (distFromS[i] != INF && distFromA[i] != INF && distFromB[i] != INF) {
