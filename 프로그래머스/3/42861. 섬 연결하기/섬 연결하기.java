@@ -53,7 +53,7 @@ class Solution {
             }
         }
         
-        answer = totalWeight;
+        answer = totalWeight; // 결과값 저장
         
         return answer;
     }
