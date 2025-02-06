@@ -5,7 +5,8 @@ class Solution {
         long answer = 0;
         long minTime = 1;   // 심사 최소 시간 1로 초기화 (심사하는데 걸리는 시간 1분부터 시작이므로)
         
-        Arrays.sort(times);
+        Arrays.sort(times); // 심사하는데 걸리는 시간을 저장한 배열 오름차순 정렬
+        
         // 최종 심사하는데 걸리는 최대 시간
         // 최악의 경우는 가장 느린 심사대에서 모든 사람이 심사를 받는 경우이므로 *n을 해준다
         long maxTime = (long) times[times.length - 1] * n;
