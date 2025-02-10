@@ -8,6 +8,7 @@ class Solution {
         visited = new boolean[words.length];
         
         result = 0; // 변환 횟수 0으로 초기화
+        
         dfs(begin, target, words, 0); // 깊이 우선 탐색 메서드 수행
         
         answer = result; // 최종적으로 구해진 변환 횟수를 결과값에 저장
