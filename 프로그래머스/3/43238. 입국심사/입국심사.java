@@ -12,6 +12,7 @@ class Solution {
         long maxTime = (long) times[times.length - 1] * n;
         answer = maxTime;   // 일단 결과값 최악의 경우로 저장 (최종 심사하는데 걸리는 최대 시간으로)
         
+        // 이분탐색 시작
         while (minTime <= maxTime) {
             long mid = (minTime + maxTime) / 2;
             long completeCount = 0; // 각 심사대가 처리할 수 있는 최대 인원 수
