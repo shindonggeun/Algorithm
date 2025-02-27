@@ -9,7 +9,6 @@ class Solution {
         int time = 0;
         int currentBridgeWeight = 0; // 현재 다리 위 트럭들의 총 무게
         
-        
         for (int truck: truck_weights) {
             while (true) {
                 if (bridgeQueue.size() == bridge_length) {
