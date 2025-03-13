@@ -23,7 +23,7 @@ class Solution {
         int columnIndex = getColumnIndex(sort_by); // 정렬 기준이 되는 컬럼 인덱스
         
         // 2차원 배열을 해당 컬럼을 기준으로 오름차순 정렬
-        Arrays.sort(data, (a, b) -> Integer.compare(a[columnIndex], b[columnIndex]));
+        Arrays.sort(data, (a, b) -> a[columnIndex] - b[columnIndex]);
     }
     
     // 해당 컬럼명을 인덱스로 변환하는 메서드
