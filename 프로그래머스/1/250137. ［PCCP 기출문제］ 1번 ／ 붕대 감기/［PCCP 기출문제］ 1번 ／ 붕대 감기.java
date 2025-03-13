@@ -58,7 +58,7 @@ class Solution {
             
         }
         
-        answer = health;
+        answer = health; // 결과값 저장
         
         return answer;
     }
