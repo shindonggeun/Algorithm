@@ -1,45 +1,57 @@
 import java.util.*;
 
 class Solution {
-    public List<Integer> solution(String today, String[] terms, String[] privacies) {
-        //int[] answer = {};
-        List<Integer> list = new ArrayList<>();
-        Map<String, Integer> map = new HashMap<>(); // key: 약관종류, value: 유효기간 달에 따른 일수 계산 (달 * 28)
-        int now_days = getDays(today);
+    
+    static final int ONE_YEAR_OF_MONTH = 12;
+    static final int START_YEAR = 2000;
+    static final int MONTH_OF_DAY = 28;
+    static Map<String, Integer> map; // key: 약관 종류, value: 유효기간 달에 따른 일수 계산 (달 * 28)
+    static List<Integer> list;
+    
+    public int[] solution(String today, String[] terms, String[] privacies) {
+        int[] answer = {};
         
-        for(String term: terms) {
-            map.put(term.split(" ")[0], Integer.parseInt(term.split(" ")[1]) * 28);
+        map = new HashMap<>();
+        list = new ArrayList<>();
+        
+        int nowDays = calculateDays(today);
+        
+        for (String term: terms) {
+            String[] termSplit = term.split(" ");
+            map.put(termSplit[0], Integer.parseInt(termSplit[1]) * MONTH_OF_DAY);
         }
         
-        for(int i=0; i<privacies.length; i++) {
-            String[] pri_arr = privacies[i].split(" "); // [0] = yyyy.mm.dd, [1] = 약관종류
-            int result_days = getDays(pri_arr[0]);
+        for (int i=0; i<privacies.length; i++) {
+            String[] privacySplit = privacies[i].split(" "); // [0] = yyyy.mm.dd, [1] = 약관 종류 (A, B, ...)
             
-            int map_days = map.get(pri_arr[1]); // map에 저장된 약관에 따른 유효기간 일수 가져오기
+            int resultDays = calculateDays(privacySplit[0]);
+            int mapGetDays = map.get(privacySplit[1]);
             
-            result_days = result_days + map_days - 1;   // 개인정보 수집 일자 + 유효기간 계산 날짜 (-1 빼주는거 잊지말자)
+            resultDays += (mapGetDays - 1);
             
-            // 유효기간 지난 경우
-            if(now_days > result_days) {
-                list.add(i+1);
+            if (resultDays < nowDays) {
+                list.add(i + 1);
             }
-        }        
-        //System.out.println(list);
-        //answer = list.stream().mapToInt(x->x).toArray();
+        }
         
-        return list;
+        answer = new int[list.size()];
+        
+        for (int i=0; i<list.size(); i++) {
+            answer[i] = list.get(i);
+        }
+        
+        return answer;
     }
     
-    // 해당 년,월,일을 일수로 계산해주는 메서드
-    public int getDays(String yymmdd) {
-        String[] ymd = yymmdd.split("[.]");
-        int yy = Integer.parseInt(ymd[0]);
-        int mm = Integer.parseInt(ymd[1]);
-        int dd = Integer.parseInt(ymd[2]);
+    public int calculateDays(String yyyymmdd) {
+        String[] yyyymmddSplit = yyyymmdd.split("[.]"); // [0] = yyyy, [1] = mm, [2] = dd
         
-        // 1년은 12달이면서 한달에 28일을 가지고 있음 (문제 설명)
-        // 2000 ~ 2022년까지 있음 (yyyy)
-        int calculate_days = dd + mm * 28 + (yy - 2000) * 12 * 28;
-        return calculate_days;
+        int year = Integer.parseInt(yyyymmddSplit[0]);
+        int month = Integer.parseInt(yyyymmddSplit[1]);
+        int day = Integer.parseInt(yyyymmddSplit[2]);
+        
+        int days = day + month * MONTH_OF_DAY + (year - START_YEAR) * ONE_YEAR_OF_MONTH * MONTH_OF_DAY;
+        
+        return days;
     }
 }
