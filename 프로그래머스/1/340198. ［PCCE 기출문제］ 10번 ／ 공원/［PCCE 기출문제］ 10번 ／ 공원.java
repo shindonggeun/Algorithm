@@ -4,7 +4,7 @@ class Solution {
     
     static int n; // 공원의 행의 크기
     static int m; // 공원의 열의 크기
-    static int[][] dp; // dp 배열
+    static int[][] dp; // dp 배열 (dp[i][j] = (i, j) 위치에서 끝나는 가능한 최대 정사각형 한 변의 길이)
     
     public int solution(int[] mats, String[][] park) {
         int answer = -1; // 결과값 -1로 세팅 (돗자리 깔 수 없는 경우 -1 반환)
