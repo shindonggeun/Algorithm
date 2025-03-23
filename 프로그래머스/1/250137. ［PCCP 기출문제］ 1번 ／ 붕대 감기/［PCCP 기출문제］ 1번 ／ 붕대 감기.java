@@ -20,7 +20,6 @@ class Solution {
         int nowTime = 0;    // 현재 시간 0초부터 시작
         int continueTime = 0;   // 연속 체력 회복 성공 시간 0초부터 시작
         
-        
         while (true) {
             nowTime++;  // 현재 시간 증가
             
