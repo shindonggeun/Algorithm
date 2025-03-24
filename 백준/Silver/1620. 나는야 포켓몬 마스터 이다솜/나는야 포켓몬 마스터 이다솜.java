@@ -5,10 +5,8 @@ public class Main {
 	
 	static int N; // 포켓몬의 개수
 	static int M; // 문제의 개수
-	// key: 포켓몬 이름, value: 포켓몬 번호
-	static Map<String, Integer> nameMap;
-	// key: 포켓몬 번호, value: 포켓몬 이름
-	static Map<Integer, String> numberMap;
+	static Map<String, Integer> nameMap; // key: 포켓몬 이름, value: 포켓몬 번호
+	static Map<Integer, String> numberMap; // key: 포켓몬 번호, value: 포켓몬 이름
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
