@@ -68,8 +68,8 @@ class Solution {
     public int calculateSecond(String time) {
         String[] mmss = time.split(":"); // "mm:ss"를 분과 초로 쪼갬
         
-        int mm = Integer.parseInt(mmss[0]);
-        int ss = Integer.parseInt(mmss[1]);
+        int mm = Integer.parseInt(mmss[0]); // 분
+        int ss = Integer.parseInt(mmss[1]); // 초
         
         return mm * 60 + ss;
     }
