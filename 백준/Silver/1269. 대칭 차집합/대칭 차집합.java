@@ -2,32 +2,37 @@ import java.util.*;
 import java.io.*;
 
 public class Main {
+	
+	static int A; // 집합 A의 원소의 개수
+	static int B; // 집합 B의 원소의 개수
+	static Map<Integer, Integer> map; // key: 원소, value: 해당 원소의 개수
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
-		Map<Integer, Integer> map = new HashMap<>();	// key: 숫자, value: 숫자가 나온 횟수
 		
-		int A = Integer.parseInt(st.nextToken());
-		int B = Integer.parseInt(st.nextToken());
+		A = Integer.parseInt(st.nextToken());
+		B = Integer.parseInt(st.nextToken());
+		
+		map = new HashMap<>();
 		
 		st = new StringTokenizer(br.readLine());
-		for(int i=0; i<A; i++) {
-			int answer = Integer.parseInt(st.nextToken());
-			map.put(answer, map.getOrDefault(answer, 0) + 1);
+		for (int i=0; i<A; i++) {
+			int num = Integer.parseInt(st.nextToken());
+			map.put(num, map.getOrDefault(num, 0) + 1);
 		}
 		
 		st = new StringTokenizer(br.readLine());
-		for(int i=0; i<B; i++) {
-			int answer = Integer.parseInt(st.nextToken());
-			map.put(answer, map.getOrDefault(answer, 0) + 1);
-			// 숫자가 나온 횟수가 2이면 map에서 삭제해버림
-			if(map.get(answer) == 2) {
-				map.remove(answer);
+		for (int i=0; i<B; i++) {
+			int num = Integer.parseInt(st.nextToken());
+			map.put(num, map.getOrDefault(num, 0) + 1);
+			if (map.get(num) == 2) {
+				map.remove(num);
 			}
 		}
 		
 		System.out.println(map.size());
+
 	}
 
 }
