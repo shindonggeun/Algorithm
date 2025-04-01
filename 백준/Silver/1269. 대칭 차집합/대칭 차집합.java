@@ -14,24 +14,26 @@ public class Main {
 		A = Integer.parseInt(st.nextToken());
 		B = Integer.parseInt(st.nextToken());
 		
-		map = new HashMap<>();
+		map = new HashMap<>(); // 해시맵 생성
 		
 		st = new StringTokenizer(br.readLine());
 		for (int i=0; i<A; i++) {
 			int num = Integer.parseInt(st.nextToken());
-			map.put(num, map.getOrDefault(num, 0) + 1);
+			map.put(num, map.getOrDefault(num, 0) + 1); // 해시맵에 해당 원소 및 원소 개수 1 증가해서 저장
 		}
 		
 		st = new StringTokenizer(br.readLine());
 		for (int i=0; i<B; i++) {
 			int num = Integer.parseInt(st.nextToken());
-			map.put(num, map.getOrDefault(num, 0) + 1);
+			map.put(num, map.getOrDefault(num, 0) + 1); // 해시맵에 해당 원소 및 원소 개수 1 증가해서 저장
+			
+			// 해시맵에 해당 원소의 개수가 2개인 경우
 			if (map.get(num) == 2) {
-				map.remove(num);
+				map.remove(num); // 해시맵에서 해당 원소 제거
 			}
 		}
 		
-		System.out.println(map.size());
+		System.out.println(map.size()); // 해시맵에 저장된 원소 개수 출력 (대칭 차집합의 원소 개수와 같음)
 
 	}
 
