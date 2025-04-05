@@ -24,7 +24,6 @@ class Solution {
                 // 해당 인물의 추억점수 뽑아내기 (없으면 0)
                 totalScore += scoreMap.getOrDefault(person, 0); 
             }
-            
             answer[i] = totalScore; // 결과배열에 해당 사진의 추억점수 합 저장
         }
         
