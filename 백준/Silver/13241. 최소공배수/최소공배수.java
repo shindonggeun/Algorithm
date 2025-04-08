@@ -16,6 +16,7 @@ public class Main {
 		System.out.println(lcm(A, B));
 	}
 	
+	// 유클리드 호제법을 이용한 두 수의 최대공약수 구하는 메서드
 	public static long gcd(long a, long b) {
 		if (b == 0) {
 			return a;
@@ -23,8 +24,9 @@ public class Main {
 		return gcd(b, a % b);
 	}
 	
+	// 유클리드 호제법을 이용한 두 수의 최대공배수를 구하는 메서드
 	public static long lcm(long a, long b) {
-		return (a / gcd(a, b)) * b;
+		return (a / gcd(a, b)) * b; // 오버플로우를 방지하기 위해 나눗셈 먼저 함
 	}
 
 }
