@@ -13,23 +13,24 @@ public class Main {
 		}
 	}
 	
+	static int T;
 	static int M; // 가로 길이
 	static int N; // 세로 길이
-	static int K; // 배추가 심어져 있는 위치의 개수
+	static int K; // 배추가 심어져 있는 위치 개수
 	static int[][] map;
 	static boolean[][] visited;
-	// 4가지 방향 배열 (하, 상, 좌, 우)
-	static int[] dx = {1, -1, 0, 0};
-	static int[] dy = {0, 0, -1, 1};
+	// 4가지 방향 배열 (상, 하, 좌, 우)
+	static int[] dx = {-1, 1, 0, 0};
+	static int[] dy = {0, 0, -1 , 1};
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = null;
 		
-		int testCase = Integer.parseInt(br.readLine());
+		T = Integer.parseInt(br.readLine());
 		StringBuilder sb = new StringBuilder();
 		
-		for (int tc=1; tc<=testCase; tc++) {
+		for (int testCase=0; testCase<T; testCase++) {
 			st = new StringTokenizer(br.readLine());
 			M = Integer.parseInt(st.nextToken());
 			N = Integer.parseInt(st.nextToken());
@@ -40,16 +41,16 @@ public class Main {
 			
 			for (int i=0; i<K; i++) {
 				st = new StringTokenizer(br.readLine());
-				int x = Integer.parseInt(st.nextToken());
-				int y = Integer.parseInt(st.nextToken());
+				int col = Integer.parseInt(st.nextToken());
+				int row = Integer.parseInt(st.nextToken());
 				
-				map[y][x] = 1;
+				map[row][col] = 1;
 			}
 			
 			int wormCount = 0;
 			for (int i=0; i<N; i++) {
 				for (int j=0; j<M; j++) {
-					if (!visited[i][j] && map[i][j] == 1) {
+					if (map[i][j] == 1 && !visited[i][j]) {
 						bfs(i, j);
 						wormCount++;
 					}
@@ -60,7 +61,6 @@ public class Main {
 		}
 		
 		System.out.print(sb);
-		
 	}
 	
 	public static void bfs(int startX, int startY) {
@@ -73,6 +73,7 @@ public class Main {
 			int nowX = now.x;
 			int nowY = now.y;
 			
+			// 4가지 방향 탐색
 			for (int i=0; i<4; i++) {
 				int nextX = nowX + dx[i];
 				int nextY = nowY + dy[i];
@@ -81,12 +82,12 @@ public class Main {
 					continue;
 				}
 				
-				if (visited[nextX][nextY] || map[nextX][nextY] == 0) {
+				if (map[nextX][nextY] == 0 || visited[nextX][nextY]) {
 					continue;
 				}
 				
-				queue.add(new Position(nextX, nextY));
 				visited[nextX][nextY] = true;
+				queue.add(new Position(nextX, nextY));
 			}
 		}
 	}
