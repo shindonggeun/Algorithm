@@ -13,7 +13,6 @@ class Solution {
                 break;
             }
             
-            
             if (bill[0] >= bill[1]) {
                 bill[0] /= 2;
             } 
