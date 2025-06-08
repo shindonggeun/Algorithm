@@ -4,7 +4,7 @@ class Solution {
     static int[] expires = new int[24]; // 각 시간별 서버 만료 수 [0] ~ [23]
     
     public int solution(int[] players, int m, int k) {
-        int answer = 0; // 결과값 (서버 증설 횟수)
+        int answer = 0;
         
         // 24시간 동안 시뮬레이션 진행
         for (int time=0; time<players.length; time++) {
