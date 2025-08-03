@@ -9,7 +9,6 @@ class Solution {
         // 24시간 동안 시뮬레이션 진행
         for (int time=0; time<players.length; time++) {
             currentServerCount -= expires[time]; // 시간별 만료된 서버 제거
-            
             int needServerCount = players[time] / m; // 현재 필요한 서버 수 계산
             
             // 현재 운영 중인 서버보다 더 많은 서버가 필요한 경우 증설해야 함
