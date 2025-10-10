@@ -44,7 +44,7 @@ class Solution {
             nextDp = temp;
         }
         
-        // A의 누적 흔적 최솟값 찾기 (핵심 변경!)
+        // A의 누적 흔적 최솟값 찾기
         int answer = -1;
         for (int a = 0; a < n; a++) {
             for (int b = 0; b < m; b++) {
