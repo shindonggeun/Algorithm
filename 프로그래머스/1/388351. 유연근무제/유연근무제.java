@@ -1,7 +1,6 @@
 class Solution {
     public int solution(int[] schedules, int[][] timelogs, int startday) {
         int answer = 0;
-        
         int humanCount = schedules.length;
         
         for (int i = 0; i < humanCount; i++) {
